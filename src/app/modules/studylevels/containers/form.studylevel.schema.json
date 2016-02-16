@@ -1,0 +1,40 @@
+{
+  "schema": {
+    "name": {
+      "title": "Name",
+      "type": "Text",
+      "fieldClass": "row",
+      "disabled": "true"
+    },
+    "description": {
+      "title": "Description",
+      "type": "TextArea",
+      "fieldClass": "row",
+      "disabled": "true"
+    }
+  },
+  
+  "fieldsets": [
+    {
+      "fields": [
+        "name",
+        "description"
+      ],
+      "buttons": {
+        "buttonsClass": "btn-toolbar",
+        "buttons": [
+          {
+            "label": "Save",
+            "action": "submit",
+            "className": "btn btn-primary pull-right"
+          },
+          {
+            "label": "Cancel",
+            "action": "cancel",
+            "className": "btn  pull-right"
+          }
+        ]
+      }
+    }
+  ]
+}
