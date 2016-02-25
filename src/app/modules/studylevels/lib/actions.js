@@ -7,7 +7,6 @@ import {API_LEVEL_GET,API_LEVEL_CLASSES,
         API_LEVEL_SUBJECTS,API_LEVEL_FEES,API_LEVEL_DELETE,
         API_LEVEL_CREATE,API_LEVEL_SAVE} from './actionTypes.js';
 
-
 /*
     Study Classes  Access Actions
  */
@@ -72,14 +71,13 @@ export function levelCreate(data){
 
 };
 
-export function levelDelete(levelId,data){
+export function levelDelete(levelIds){
     return (dispatch) => {
-        let url=String(URL_LEVEL).replace(':id',levelId);
-        return dispatch(APIdeleteFetch(url,API_LEVEL_DELETE,{levelId,data}));
+        let url=URL_LEVEL_LIST;
+        return dispatch(APIdeleteFetch(url,API_LEVEL_DELETE,{...levelIds}));
     };
 
 };
-
 
 /*
     Study fees  Access Actions
@@ -96,9 +94,6 @@ export function feesGet(levelId) {
 
     };
 }
-
-
-
 
 export function updateSelectedIds(level)
 {

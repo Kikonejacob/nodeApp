@@ -120,14 +120,14 @@ show(options){
         url:API_URL+'/'+this.current
 
     });
-     
+
     this.model.get().done(function(response){
 
         debug.log(response.data);
 
         let Rendered=(<Form  data={response.data} onSubmitForm={this.handleSubmit} />);
 
-        services.trigger('load-content',Rendered,'react');      
+        services.trigger('load-content',Rendered,'react');
 
     }.bind(this));
 }

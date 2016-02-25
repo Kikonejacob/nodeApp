@@ -83,7 +83,7 @@ function levelRequests(state={levels:{} },action)
         isFetching=(action.status==RESTAPI_REQUEST);
         if (isFetching)
         {
-            console.log(action)
+            console.log(action);
             return Object.assign({}, state,{[action.levelId]:{
                 ...state[action.levelId],
                 isFetching: true,

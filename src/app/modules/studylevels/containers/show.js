@@ -18,7 +18,7 @@ render(){
     {
         let {classes,fees,data}=this.props;
         let levelId=data.id;
-        let feeUrl='./#studylevels/:id/fees/:key/';
+        let feeUrl='./#levelfees/:key';
 
         return(
         	<div>

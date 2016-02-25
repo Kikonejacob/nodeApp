@@ -20,7 +20,7 @@ constructor(){
 
     this.title = stringRes.studentBasic;
     this.current = null;
-	};
+    };
 
 show(){
 
