@@ -51,6 +51,7 @@ var AppRouter=Backbone.Router.extend ({
         'feeheads/:id/':'feeheads#show',
         'feeheads/create':'feeheads#create',
         'studylevels/:id/fees':'levelfees#index',
+        'studylevels/:id/fees_multiselect':'levelfees#select',
         'levelfees/:id':'levelfees#show',
 
     },

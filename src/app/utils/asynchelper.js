@@ -21,10 +21,10 @@ export function ShouldFetch(data) {
         return true; //data.didInvalidate;
     }
 }
-export  function APIgetFetch(url,actionType,subdata) {
+export  function APIgetFetch(url,actionType,subdata,ajaxParams={}) {
     return dispatch => {
         dispatch(AsyncActionCreator(actionType,RESTAPI_REQUEST,subdata));
-        return get(url)
+        return get(url,{params:ajaxParams})
           //.then(req => req.json())
           .then(json => {
               let params={...subdata,

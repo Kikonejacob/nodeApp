@@ -8,7 +8,7 @@ import PageableCollection from 'utils/pageableCollection';
 
 import { Provider } from 'react-redux';
 import {levelfeeGet,levelfeeSave,levelfeeCreate,levelfeeDelete,
-       levelfeesDelete,fetchLevelfeeGrid} from './lib/actions.js';
+       levelfeesDelete,fetchLevelfeeGrid,refreshLevelfeeGrid} from './lib/actions.js';
 import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
 
 
@@ -84,14 +84,44 @@ constructor(options){
 /**
  * @levelid
  */
+
+select(options){
+    let levelId=options[0];
+    this.current=levelId;
+    let {collectionOptions}=this.registry.getState().levelfeesGrid;
+    let Container= (<Provider store={this.registry}>
+                      <List collectionOptions={collectionOptions} multiselect={true} />
+                    </Provider>);
+    this.registry.dispatch(fetchLevelfeeGrid(levelId));
+    this.registry.dispatch(updateActiveContainer({levelId:levelId}));
+    this.registry.dispatch(loadContainer(Container));
+    this.registry.dispatch(changetitle(LIST_TITLE));
+
+}
+handleIndexActions(action,selectedRowIds,dispatch){
+  console.log('LLLLL')
+    switch (action) {
+    case 'multiselect':
+        console.log('ACT')
+        dispatch(refreshLevelfeeGrid({multiselect:true}))
+
+         break;
+       default:
+
+     }
+
+}
 index(options)
 {
 
     let levelId=options[0];
     this.current=levelId;
+    let header={ description:"index",
+                 onAction:this.handleIndexActions.bind(this)};
+
     let {collectionOptions}=this.registry.getState().levelfeesGrid;
     let Container= (<Provider store={this.registry}>
-                      <List collectionOptions={collectionOptions} />
+                      <List collectionOptions={collectionOptions} {...header} />
                     </Provider>);
     this.registry.dispatch(fetchLevelfeeGrid(levelId));
     this.registry.dispatch(updateActiveContainer({levelId:levelId}));

@@ -4,6 +4,7 @@ import {API_SAVE_LEVEL_FEE,API_GET_LEVEL_FEE,API_CREATE_LEVEL_FEE
         ,API_DEL_LEVEL_FEE,API_DEL_LEVEL_FEES,GRID_PAGE_LEVEL_FEE,CHANGE_STATE} from './actionTypes.js';
 
 import {fetchCollection,getCollectionParams} from './gridActionsHelpers.js';
+import * as _ from 'underscore';
 
 
 
@@ -16,6 +17,8 @@ export function fetchLevelfeeGrid(levelId){
         let url=URL_LEVEL_FEES.replace(':id',levelId);
         console.log(url);
         let params=getCollectionParams(url,state.collectionOptions);
+        params.url=url;
+
         console.log(params);
         if (ShouldFetch(state)) {
             return dispatch(APIgetFetch(url,GRID_PAGE_LEVEL_FEE,params));
@@ -30,22 +33,27 @@ export function refreshLevelfeeGrid(collectionOptions){
     return (dispatch, getState) => {
         console.log('refreshinnnnnn')
         let state=getState().levelfeesGrid;
-
         let changeAction={type:GRID_PAGE_LEVEL_FEE,
                              status:CHANGE_STATE,
-                             change:collectionOptions}
-        if (state.url=='')
-          return ChangeAction
+                             ...collectionOptions}
+
+        if (!state.collectionOptions.url)
+        {
+            console.log(collectionOptions)
+            return dispatch(changeAction)
+
+        }
         else {
-          dispatch(changeAction);
+            dispatch(changeAction);
         }
 
-        let url=state.url;
-        console.log(url);
-        let params=getCollectionParams(url,state.collectionOptions);
-        console.log(params);
+        let url=state.collectionOptions.url;
+        let NewcollectionOptions={...state.collectionOptions,...collectionOptions}
+        console.log(NewcollectionOptions);
+        let params=getCollectionParams(url,NewcollectionOptions);
+        //console.log(params);
         if (ShouldFetch(state)) {
-            return dispatch(APIgetFetch(url,GRID_PAGE_LEVEL_FEE,params));
+            return dispatch(APIgetFetch(url,GRID_PAGE_LEVEL_FEE,{},params));
         }
 
     };

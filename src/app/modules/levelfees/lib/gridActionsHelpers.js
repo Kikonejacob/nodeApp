@@ -20,7 +20,7 @@ function queryStringToParams (qs) {
 export function getCollectionParams(uri,state){
 
     let url=uri|| "";
-    console.log(uri);
+    //console.log(uri);
     let params={};
     // dedup query params
     let qsi = url.indexOf('?');
@@ -28,7 +28,6 @@ export function getCollectionParams(uri,state){
         params={...params,...queryStringToParams(url.slice(qsi + 1))};
         url = url.slice(0, qsi);
     }
-    params.url=url;
 
     // map params except directions
     let queryParams = state.mode == 'client' ?
@@ -58,8 +57,16 @@ export function getCollectionParams(uri,state){
     }
     else if (!state.sortKey) delete params[queryParams.order];
 
+    //console.log(state)
+    if (state.query)
+    {
+        console.log("QUERRY")
+        params.query=state.query;
+    }
 
-  return params;
+    params=_.omit(params,'url');
+
+    return params;
 
 }
 

@@ -46,13 +46,14 @@ function levelfeesGrid(state=initialPagingState,action){
 
         isFetching=(action.status==RESTAPI_REQUEST);
         if ((isFetching) || (action.status==CHANGE_STATE)){
+            //console.log({...state,collectionOptions:{...state.collectionOptions,...action}});
             return {...state,collectionOptions:{...state.collectionOptions,...action}};
         }
         else {
             let response=action.data;
             let serverState=parseServerState(response,state.queryParams,state.collectionOptions);
             return {...state,results:response,
-                      collectionOptions:{...state.collectionOptions,serverState}};
+                      collectionOptions:{...state.collectionOptions,...serverState}};
         }
         break;
 

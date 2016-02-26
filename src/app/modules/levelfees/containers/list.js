@@ -54,18 +54,28 @@ collectionMgr(cmd,options){
 
 
 }
+handleActions(e,action){
+    let selectedRowIds=this.refs.gridlist.refs.SchGrid.state.selectedRowIds;
+    console.log(selectedRowIds);
+
+    if (this.props.onAction!=null)
+		{
+        this.props.onAction(action,selectedRowIds,this.props.dispatch);
+    };
+}
 
 render(){
 
 
     let {title,description,onAction}=this.props;
     let header;
-
+    //console.log(this.props.multiselect);
     if (!this.props.multiselect)
     {
         header=(<Header title= {title} description={description}>
                    <Button link='#studylevels/create' action='new'>Add new level</Button>
-                   <Button link='#studylevels/delete' action='delete...'>Delete...</Button>
+                   <Button link='#' onLinkAction={this.handleActions.bind(this)}
+                             action='multiselect'>Select</Button>
         </Header>);
     }
     else {
@@ -77,8 +87,8 @@ render(){
 
     return(<div>
              {header}
-             <GridView {...this.props} columns={columns} columnMetadata={columnsMetaData}
-                  collectionMgr={this.collectionMgr.bind(this) }/>
+             <GridView ref='gridlist' {...this.props} columns={columns} columnMetadata={columnsMetaData}
+                  collectionMgr={this.collectionMgr.bind(this)  } multiselect={this.props.multiselect}/>
       </div>);
 
 };
@@ -87,6 +97,7 @@ render(){
 
 function mapStateToProps(state) {
     const { levelfeesGrid} = state;
+    const {multiselect}=state.collectionObjects;
 
     const {multiselect,results,
            showFilter,showSettings}=levelfeesGrid;

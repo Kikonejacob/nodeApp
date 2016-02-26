@@ -4,12 +4,14 @@ import Griddle from 'griddle-react';
 import _ from 'underscore';
 import GriddlePager from './GriddlePager';
 import LinkComponent from './griddleLinkComponent';// just for export purpose
+import Spinner from 'react-spin';
 
 export const COLLECTION_FETCH='COLLECTION_FETCH';
 export const COLLECTION_SORT='COLLECTION_SORT';
 export const COLLECTION_SET_PAGE='COLLECTION_SET_PAGE';
 export const COLLECTION_FILTER='COLLECTION_FILTER';
 export const COLLECTION_SETPAGE_SIZE='COLLECTION_SETPAGE_SIZE';
+
 
 var SchGridView = React.createClass({
 
@@ -21,7 +23,7 @@ var SchGridView = React.createClass({
      this.props.dispatch()*/
     },
     componentWillReceiveProps:function(nextProps){
-        console.log(nextProps);
+        //console.log(nextProps);
 
     },
     getExternalData: function(stateInfo=null){
@@ -120,7 +122,8 @@ var SchGridView = React.createClass({
     render: function(){
 
         var multiselectProps={};
-        if (this.props.multiselect)
+        console.log(this.props.collectionOptions);
+        if (this.props.collectionOptions.multiselect)
         {
             console.log(this.props.selectedIds);
             multiselectProps={
@@ -131,12 +134,11 @@ var SchGridView = React.createClass({
         }
 
         let {collectionOptions}=this.props;
-        console.log(collectionOptions);
+        //console.log(collectionOptions);
 
 
 
         return (<div className="table-responsive">
-
 
       <Griddle ref='SchGrid' useExternal={true} externalSetPage={this.externalSetPage}
          externalChangeSort={this.changeSort}
@@ -178,7 +180,8 @@ var SchGridView = React.createClass({
 SchGridView.propTypes = {
     collectionMgr: PropTypes.func.isRequired,
     multiselect:PropTypes.bool.isRequired,
-    collectionOptions:PropTypes.object.isRequired
+    collectionOptions:PropTypes.object.isRequired,
+    isFetching:PropTypes.bool
 };
 
 
