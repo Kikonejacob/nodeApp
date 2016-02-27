@@ -1,7 +1,8 @@
 import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
 import {API_GET_LEVEL_FEE,API_SAVE_LEVEL_FEE, API_CREATE_LEVEL_FEE,API_DEL_LEVEL_FEES,
-        API_DEL_LEVEL_FEE,GRID_PAGE_LEVEL_FEE,CHANGE_STATE} from './actionTypes';
+        API_DEL_LEVEL_FEE,GRID_COLLECT_LEVEL_FEE,GRID_CONF_LEVEL_FEE,CHANGE_STATE} from './actionTypes';
 import {parseServerState} from './gridActionsHelpers';
+import * as _ from 'underscore';
 
 let queryParams= {
     currentPage: 'page',
@@ -42,7 +43,7 @@ function levelfeesGrid(state=initialPagingState,action){
     let response={};
 
     switch (action.type) {
-    case GRID_PAGE_LEVEL_FEE:
+    case GRID_COLLECT_LEVEL_FEE:
 
         isFetching=(action.status==RESTAPI_REQUEST);
         if ((isFetching) || (action.status==CHANGE_STATE)){
@@ -56,6 +57,9 @@ function levelfeesGrid(state=initialPagingState,action){
                       collectionOptions:{...state.collectionOptions,...serverState}};
         }
         break;
+    case GRID_CONF_LEVEL_FEE:
+        console.log(action);
+        return {...state,...action.options};
 
     default:
         return state;

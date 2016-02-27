@@ -1,7 +1,7 @@
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
 import {URL_LEVEL_FEE,URL_LEVEL_FEES}from 'lib/apiUrlconst';
 import {API_SAVE_LEVEL_FEE,API_GET_LEVEL_FEE,API_CREATE_LEVEL_FEE
-        ,API_DEL_LEVEL_FEE,API_DEL_LEVEL_FEES,GRID_PAGE_LEVEL_FEE,CHANGE_STATE} from './actionTypes.js';
+        ,API_DEL_LEVEL_FEE,API_DEL_LEVEL_FEES,GRID_COLLECT_LEVEL_FEE,CHANGE_STATE,GRID_CONF_LEVEL_FEE} from './actionTypes.js';
 
 import {fetchCollection,getCollectionParams} from './gridActionsHelpers.js';
 import * as _ from 'underscore';
@@ -21,11 +21,15 @@ export function fetchLevelfeeGrid(levelId){
 
         console.log(params);
         if (ShouldFetch(state)) {
-            return dispatch(APIgetFetch(url,GRID_PAGE_LEVEL_FEE,params));
+            return dispatch(APIgetFetch(url,GRID_COLLECT_LEVEL_FEE,params));
         }
 
     };
 
+}
+
+export function refreshLevelfeeGridOptions(options){
+    return { type:GRID_CONF_LEVEL_FEE,options}
 }
 
 export function refreshLevelfeeGrid(collectionOptions){
@@ -33,7 +37,7 @@ export function refreshLevelfeeGrid(collectionOptions){
     return (dispatch, getState) => {
         console.log('refreshinnnnnn')
         let state=getState().levelfeesGrid;
-        let changeAction={type:GRID_PAGE_LEVEL_FEE,
+        let changeAction={type:GRID_COLLECT_LEVEL_FEE,
                              status:CHANGE_STATE,
                              ...collectionOptions}
 
@@ -53,7 +57,7 @@ export function refreshLevelfeeGrid(collectionOptions){
         let params=getCollectionParams(url,NewcollectionOptions);
         //console.log(params);
         if (ShouldFetch(state)) {
-            return dispatch(APIgetFetch(url,GRID_PAGE_LEVEL_FEE,{},params));
+            return dispatch(APIgetFetch(url,GRID_COLLECT_LEVEL_FEE,{},params));
         }
 
     };

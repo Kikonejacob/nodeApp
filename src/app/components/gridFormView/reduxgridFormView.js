@@ -123,12 +123,12 @@ var SchGridView = React.createClass({
 
         var multiselectProps={};
         console.log(this.props.collectionOptions);
-        if (this.props.collectionOptions.multiselect)
+        if (this.props.multiselect)
         {
             console.log(this.props.selectedIds);
             multiselectProps={
                 isMultipleSelection:true,
-                selectedRowIds:this.state.selectedIds,
+                selectedRowIds:this.props.selectedRowIds,
                 rowSelection:'multiple'
             };
         }

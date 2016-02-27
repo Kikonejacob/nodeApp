@@ -6,7 +6,7 @@ import React from 'react';
 import Header from 'components/ModuleHeaderView/ModuleHeaderView';
 import Button from 'components/LinkComponent/LinkButtonView';
 
-
+const BT_DELETE_SELECTED='Delete selected';
 
 import { connect } from 'react-redux';
 
@@ -97,9 +97,8 @@ render(){
 
 function mapStateToProps(state) {
     const { levelfeesGrid} = state;
-    const {multiselect}=state.collectionObjects;
 
-    const {multiselect,results,
+    const {results,multiselect,
            showFilter,showSettings}=levelfeesGrid;
     return {
         multiselect,

@@ -6,6 +6,7 @@ import Button from 'components/LinkComponent/LinkButtonView';
 
 const FORM_LIST_ADD='Create';
 const FORM_LIST_DELETE='Delete ...';
+const BT_DELETE_SELECTED='Delete selected';
 
 
 
