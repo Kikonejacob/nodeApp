@@ -1,0 +1,36 @@
+{
+ "schema": {
+   "firstName": {
+     "title": "First name",
+     "type": "Text",
+     "fieldClass": "row"
+   },
+   "lastName": {
+     "title": "Last name",
+     "type": "Text",
+     "fieldClass": "row"
+   },
+   "firstName": {
+     "title": "email",
+     "type": "Text",
+     "fieldClass": "row"
+   },
+   "phone": {
+     "title": "Phone",
+     "type": "Text",
+     "fieldClass": "row"
+   }
+
+   ,
+   "email": {
+     "title": "Email",
+     "type": "Text",
+     "fieldClass": "row"
+   }
+ },
+ "fieldsets":[{
+      "fields":["firstName","lastName","email","phone"]
+
+
+ }]
+}

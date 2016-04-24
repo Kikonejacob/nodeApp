@@ -6,6 +6,7 @@
 
 
 var gulp = require('gulp');
+var shell = require('gulp-shell');
 var merge = require('merge-stream');
 var path = require('path');
 var webpackStream = require('webpack-stream');
@@ -65,10 +66,21 @@ gulp.task('webpack-scripts', function() {
 });
 
 
+var exec = require('child_process').exec;
+
+gulp.task('server', function (cb) {
+  exec('npm start', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+})
+
+
 gulp.task("webpack-dev-server", function(callback) {
 
-  
-   
+
+
 
     // Start a webpack-dev-server
     new WebpackDevServer(webpack(webpackConfig),
@@ -109,7 +121,7 @@ gulp.task('icons', function() {
     return merge(bootstrap,font_awsome);
 });
 
-/* 
+/*
 gulp.task('styles', function () {
     var processors = [
         autoprefixer({browsers: ['last 1 version']}),
@@ -214,6 +226,6 @@ gulp.task('build',function(){
 });
 
 gulp.task('build-dev',['build-assets'],function(){
-    gulp.start(['webpack-dev-server']);
+    gulp.start(['server']);
 
 });

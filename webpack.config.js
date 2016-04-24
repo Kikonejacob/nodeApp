@@ -12,11 +12,15 @@ function pathTo() {
 
 appPathTo = _.partial( pathTo, 'app' );
 
-
+/*
 var entry= [
         'webpack-dev-server/client?http://' + host + ':' + port,
         'webpack/hot/only-dev-server',
         './src/app/main.js'
+    ],*/
+var entry= [
+      'webpack-hot-middleware/client',
+      './src/app/main.js',
     ],
 
   output = {
@@ -62,6 +66,9 @@ module.exports.development = {
         colors: true,
         reasons: true
     },
+    node: {
+     fs: "empty"
+   },
     devServer: {
         contentBase: "dist",
         hot: true,

@@ -2,7 +2,7 @@
 import React from 'react';
 import Griddle from 'griddle-react';
 import _ from 'underscore';
-import GriddlePager from './GriddlePager';
+import GriddlePager from './griddlePager';
 import LinkComponent from './griddleLinkComponent';// just for export purpose
 import servicesChannels from 'services/servicesChannels'
 
@@ -143,7 +143,7 @@ var SchGridView = React.createClass({
     }
 
 
-    return (<div className="table-responsive">
+    return (<div className="col-lg-12">
 
     	<Griddle ref='SchGrid' useExternal={true} externalSetPage={this.externalSetPage}
     	   externalChangeSort={this.changeSort}

@@ -122,8 +122,10 @@ render() {
     }
 
 
-    return (<Form  {...this.props} onButtonClick={this.handleButtonClick} 
-                   onSubmit={this.handleSubmit} valueManager={this.valueManager}/>);
+    return (<div className="col-lg-12">
+                <Form  {...this.props} onButtonClick={this.handleButtonClick}
+                   onSubmit={this.handleSubmit} valueManager={this.valueManager}/>
+            </div>);
     }
 
 };

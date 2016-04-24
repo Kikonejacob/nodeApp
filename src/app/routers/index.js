@@ -31,12 +31,12 @@ var AppRouter=Backbone.Router.extend ({
         '':'students#index',
         'home':'home',
         'students':'students#index',
-        'students/:id/show':'students#show',
+        'students/:id':'students#show',
         'students/:id/edit':"students#edit",
         'students/admissions/add':'students#create',
         'schoolinfo':'schoolinfo#show',
         'studylevels':'studylevels#index',
-        'studylevels/:id/':'studylevels#show',
+        'studylevels/:id':'studylevels#show',
         'studylevels/:id/$edit':'studylevels#edit',
         'studylevels/$create':'studylevels#create',
         'studylevels/$delete':'studylevels#delete',
@@ -51,8 +51,8 @@ var AppRouter=Backbone.Router.extend ({
         'feeheads/:id/':'feeheads#show',
         'feeheads/create':'feeheads#create',
         'studylevels/:id/fees':'levelfees#index',
-        'studylevels/:id/fees_multiselect':'levelfees#select',
-        'levelfees/:id':'levelfees#show',
+        //'levelfees/:id':'levelfees#show',
+        'studylevels/:id/fees/:code':'levelfees#edit',
 
     },
 
@@ -63,6 +63,7 @@ var AppRouter=Backbone.Router.extend ({
         this.channel.on('routeBack',this.back.bind(this));
         //console.log(options);
         this.store=options.store;
+        this.responsiveRender=options.responsivefunc;
 
 
         this.routesHit = 0;
@@ -85,6 +86,9 @@ var AppRouter=Backbone.Router.extend ({
     },
 
     execute:function(callback, args, name) {
+
+        this.responsiveRender();
+        $('div.sidebar-nav').removeClass('in');
 
         var controllerInfo=name.split('#');
 
@@ -121,7 +125,7 @@ var AppRouter=Backbone.Router.extend ({
 
     start:function() {
         console.log('starting routing');
-        Backbone.history.start({pushState: false,root:'/app/'});
+        Backbone.history.start({pushState: false,root:'/'});
     },
 
     regRoute:function(route,name,func){

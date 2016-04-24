@@ -8,49 +8,45 @@ import ProgressDialog from 'components/ProgressDialog/progressDialog';
 
 class Form extends Component{
 
+    render(){
+        if (this.props.isFetching)
+            return (<ProgressDialog> Please wait ....</ProgressDialog>);
+        else
+        {
+            let {classes,fees,data}=this.props;
+            let levelId=data.id;
+            let feeUrl='./#studylevels/:id/fees/:key';
+
+            return(
+            	<div className="col-lg-12">
+
+        	    	<Panel title={data.name} configLink={String('/levels/:id/edit').replace('id',levelId)}>
+        	    			<div>
+
+        				    	<p>Name: <span>{data.name}</span></p>
+        				    	<p>Description: <span>{data.description}</span></p>
+        				    </div>
+        			</Panel>
+
+        			<Panel title="Classes">
+        	  			<InlineList data={classes.items} captionField='name'
+                                  keyField='id' linkUrl='./#classes/:key/' />
 
 
-render(){
-
-    if (this.props.isFetching)
-        return (<ProgressDialog> Please wait ....</ProgressDialog>);
-    else
-    {
-        let {classes,fees,data}=this.props;
-        let levelId=data.id;
-        let feeUrl='./#levelfees/:key';
-
-        return(
-        	<div>
-
-    	    	<Panel title={data.name} configLink={String('/levels/:id/edit').replace('id',levelId)}>
-    	    			<div>
-
-    				    	<p>Name: <span>{data.name}</span></p>
-    				    	<p>Description: <span>{data.description}</span></p>
-    				    </div>
-    			</Panel>
-
-    			<Panel title="Classes">
-    	  			<InlineList data={classes.items} captionField='name'
-                              keyField='id' linkUrl='./#classes/:key/' />
+        			</Panel>
 
 
-    			</Panel>
+        	  		<Panel title="Fees">
+        	  			<List data={fees.items}  captionField='fee_code'
+                                keyField='fee_code' linkUrl={feeUrl.replace(':id',levelId)}  />
+
+        			</Panel>
+
+            	  </div>);
+        }
 
 
-    	  		<Panel title="Fees">
-    	  			<List data={fees.items}  captionField='fee_code'
-                            keyField='fee_code' linkUrl={feeUrl.replace(':id',levelId)}  />
-
-    			</Panel>
-
-        	  </div>);
     }
-
-
-
-}
 
 
 

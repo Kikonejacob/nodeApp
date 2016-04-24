@@ -1,0 +1,5 @@
+export const API_ENROLL='API_ENROLL';
+export const API_GET_ENROLL='API_GET_ENROLL';
+export const API_SET_ENROLL='API_SET_ENROLL';
+export const API_DEL_ENROLL='API_DEL_ENROLL';
+export const API_LIST_ENROLLS='API_LIST_ENROLLS';

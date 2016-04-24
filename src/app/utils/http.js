@@ -24,10 +24,11 @@ function ajax( url, verb, options ) {
     let ajaxData;
 
     ajaxData = verb === 'GET' ? options.params : JSON.stringify( options.params );
-
-    return when(
+    //return when(
+    return Promise.resolve(
         $.ajax( {
             url,
+            async:true,
             data: ajaxData,
             type: verb,
             dataType: 'json',

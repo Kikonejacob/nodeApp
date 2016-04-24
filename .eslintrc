@@ -1,13 +1,15 @@
 {
     "parser": "babel-eslint",
     "plugins": [
-        "react"
+        "react",
+        "mocha"
     ],
     "env": {
         "browser": true,
         "es6": true,
         "node": true,
-        "jquery": true
+        "jquery": true,
+        "mocha": true,
     },
     "ecmaFeatures": {
         "arrowFunctions": true,
@@ -48,9 +50,10 @@
         "react/jsx-uses-vars": 2,
         "react/no-did-mount-set-state": 1,
         "react/no-did-update-set-state": 1,
-        "react/no-unknown-property": 1,
+        "react/no-unknown-property": 2,
         "react/wrap-multilines": 1,
         "react/react-in-jsx-scope": 1,
-        "react/no-unknown-property": 2
+
+        "mocha/no-exclusive-tests": 2,
     }
 }

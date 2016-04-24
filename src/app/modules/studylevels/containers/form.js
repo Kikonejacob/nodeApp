@@ -6,19 +6,14 @@ import { connect } from 'react-redux';
 
 
 export default class Form extends Component{
+    render(){
+        return(<div> <FormView formButtons={btSaveCancel} schema={schema}
+                         data={this.props.data} {...this.props} />
+               </div>);
 
 
 
-render(){
-
-
-    return(<div> <FormView formButtons={btSaveCancel} schema={schema}
-                     data={this.props.data} {...this.props} />
-           </div>);
-
-
-
-}
+    };
 
 
 

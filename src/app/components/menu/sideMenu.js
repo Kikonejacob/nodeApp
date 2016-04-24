@@ -6,13 +6,12 @@ class SideMenu extends React.Component {
 
   componentDidMount() {
     // When the component is added, turn it into a modal
-    $(React.findDOMNode(this))
-      .metisMenu();
+      $(React.findDOMNode(this)).metisMenu();
   }
   componentWillUnmount() {
     //$(React.findDOMNode(this)).off('hidden', this.handleHidden);
   }
-  
+
   render() {
 
     return (
@@ -26,7 +25,7 @@ class SideMenu extends React.Component {
                                 </button>
                             </span>
                         </div>
-                        
+
                     </li>
                     <li>
                         <a href="index.html" className="active"><i className="fa fa-dashboard fa-fw"></i> Dashboard</a>
@@ -41,7 +40,7 @@ class SideMenu extends React.Component {
                                 <a href="morris.html">Morris.js Charts</a>
                             </li>
                         </ul>
-                        
+
                     </li>
                     <li>
                         <a href="tables.html"><i className="fa fa-table fa-fw"></i> Tables</a>
@@ -71,7 +70,7 @@ class SideMenu extends React.Component {
                                 <a href="grid.html">Grid</a>
                             </li>
                         </ul>
-                        
+
                     </li>
                     <li>
                         <a href="#"><i className="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span className="fa arrow"></span></a>
@@ -98,10 +97,10 @@ class SideMenu extends React.Component {
                                         <a href="#">Third Level Item</a>
                                     </li>
                                 </ul>
-                                
+
                             </li>
                         </ul>
-                        
+
                     </li>
                     <li>
                         <a href="#"><i className="fa fa-files-o fa-fw"></i> Sample Pages<span className="fa arrow"></span></a>
@@ -113,7 +112,7 @@ class SideMenu extends React.Component {
                                 <a href="login.html">Login Page</a>
                             </li>
                         </ul>
-                        
+
                     </li>
                </ul>);
             }
@@ -121,4 +120,3 @@ class SideMenu extends React.Component {
 }
 
 module.exports=SideMenu;
-
