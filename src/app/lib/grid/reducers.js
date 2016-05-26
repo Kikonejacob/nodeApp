@@ -1,6 +1,7 @@
 import {GRID_FETCH_COLLECTION,GRID_INIT_CONFIG,GRID_UPDATE_CONFIG,CHANGE_STATE} from './actionTypes';
-import {parseServerState} from 'lib/grid/gridActionsHelpers';
+import {parseServerState} from 'lib/collections/collectionHelpers';
 import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
+import {merge} from 'utils/stateHelper';
 
 
 let queryParams= {
@@ -41,13 +42,19 @@ let initialPagingState=        {
 
 
 
-function schGrids(state=[],action){
-    let isFetching=false;
+function schGrids(state={},action){
+    let isFetchINIT_COLLECTIONing=false;
     let response={};
 
     switch (action.type) {
+    /** By default tjje collection name and grid name will be the same when initiating a grid*/
     case GRID_INIT_CONFIG:
-        return {...state,[action.gridName]:{...initialPagingState,url:action.url} };
+        console.log('GRID INIT init');
+        //return {...state,[action.gridName]:{.Name);
+        return merge(state)(action.gridName,{...initialPagingState,
+                                             url:action.url,
+                                             collectionName:action.gridName,
+                                         } );
     case GRID_FETCH_COLLECTION:
 
         isFetching=(action.status==RESTAPI_REQUEST);

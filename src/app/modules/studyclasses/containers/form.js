@@ -24,7 +24,7 @@ export let schema = {
       "type": 'Select',
       "fieldClass": "row",
     }
-    
+
   },
   'buttons':{'buttonsClass':'btn-toolbar',
                   'buttons':[{ label:'Savcxxslddse', action:'submit',className:'btn btn-primary pull-right'},
@@ -33,7 +33,7 @@ export let schema = {
       },
   'fieldsets':[{
        'fields':['name','description','levelId','branchId'],
-       
+
        'buttons':{'buttonsClass':'btn-toolbar',
                   'buttons':[{ label:'Save', action:'submit',className:'btn btn-primary pull-right'},
                             { label:'Cancel',action:'cancel', className:'btn  pull-right'}
@@ -74,17 +74,10 @@ listBranches().done(function(response){
 
 export default class Form extends Component{
 
+    render(){
 
-
-render(){
-
-   
-
-    return(<div> <FormView formButtons={btSaveCancel} schema={schema}  {...this.props} />  </div>);
-
-
-
-}
+        return(<div> <FormView formButtons={btSaveCancel} schema={schema}  {...this.props} />  </div>);
+    }
 
 
 

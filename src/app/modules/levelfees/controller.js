@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import {levelfeeGet,levelfeeSave,levelfeeCreate,levelfeeDelete,
        levelfeesDelete,initLevelfeeGrid} from './lib/actions.js';
 import {refreshGridOptions} from 'lib/grid/actions.js';
+import {refreshCollection} from 'lib/collections/actions';
 import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
 
 
@@ -40,6 +41,7 @@ export default  class  {
             if (confirmResult==true)
             {
                 dispatch(levelfeesDelete(selectedRowIds));
+                dispatch(refreshCollection(this.gridName));
             }
             break;
         case 'cancel_multiselect':
@@ -64,9 +66,9 @@ export default  class  {
         this.registry.dispatch(initLevelfeeGrid(levelId,this.gridName));
 
 
-        let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
+    //    let {options}=this.registry.getState().collections[this.gridName];
         let Container= (<Provider store={this.registry}>
-                          <List collectionOptions={collectionOptions}
+                          <List
                                 gridName={this.gridName}
                                 urlgroup={this.current}
                                 {...header} />

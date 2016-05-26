@@ -8,7 +8,7 @@
 import GridView,{LinkComponent,COLLECTION_SORT,COLLECTION_FETCH,
                  COLLECTION_FILTER,COLLECTION_SET_PAGE,
                  COLLECTION_SETPAGE_SIZE} from 'components/gridFormView/reduxgridFormView';
-import {refreshGrid} from 'lib/grid/actions';
+import {refreshCollection} from 'lib/collections/actions';
 import React from 'react';
 import Header from 'components/ModuleHeaderView/ModuleHeaderView';
 import Button from 'components/LinkComponent/LinkButtonView';
@@ -55,7 +55,7 @@ class List extends React.Component{
         case COLLECTION_FILTER:
         case COLLECTION_SET_PAGE:
         case COLLECTION_SETPAGE_SIZE:
-            this.props.dispatch(refreshGrid(options,this.props.gridName));
+            this.props.dispatch(refreshCollection(this.props.gridName,options));
             break;
         default:
 
@@ -103,14 +103,17 @@ class List extends React.Component{
 }
 
 function mapStateToProps(state) {
-    const { schGrids} = state;
+    const { schGrids,collections} = state;
     const studentGrid=schGrids['students.grid'];
+    const {items,options}=collections[studentGrid.collectionName];
 
-    const {results,multiselect,
+    const {multiselect,
            showFilter,showSettings}=studentGrid;
     return {
         multiselect,
-        results,showFilter,showSettings
+        results:items,
+        collectionOptions:options,
+        showFilter,showSettings
     };
 }
 export default connect(mapStateToProps)(List);

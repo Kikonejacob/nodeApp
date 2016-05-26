@@ -58,6 +58,7 @@
     "precss": "kikonejacob/precss",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
+    "remote-redux-devtools": "^0.3.3-alpha2",
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",

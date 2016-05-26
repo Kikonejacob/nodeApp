@@ -1,6 +1,9 @@
 import {ShouldFetch,APIgetFetch} from 'utils/asyncHelper';
-import {URL_CLASSE_LIST,URL_CLASS}from 'lib/apiUrlconst';
+import {URL_CLASSE_LIST,URL_CLASS,URL_LEVEL_CLASSES}from 'lib/apiUrlconst';
 import {API_LIST_STUDYCLASS} from './actionTypes';
+
+import {fetchCollection,initCollection} from 'lib/collections/actions';
+
 
 
 
@@ -21,4 +24,23 @@ export function getStudyClasses(levelId) {
         }
 
     };
+}
+
+
+/** List level classes
+ * *
+ * @param  {[type]} levelId [description]
+ * @return {[type]}         [description]
+ */
+export function listLevelClasses(levelId,collectionName){
+    return (dispatch) => {
+        let url=URL_LEVEL_CLASSES;
+        url=url.replace(':id',levelId);
+        if (collectionName==undefined){
+            collectionName='levels.${levelId}.classes';
+        }
+        dispatch(initCollection(collectionName,url));
+        dispatch(fetchCollection(collectionName,url));
+    };
+
 }

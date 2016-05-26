@@ -43,6 +43,7 @@ var AppRouter=Backbone.Router.extend ({
         'studylevels/:id/classes':'studyclasses#index',
         'classes':'studyclasses#index',
         'classes/:id/':'studyclasses#show',
+        'classes/:id/edit':'studyclasses#edit',
         'classes/create':'studyclasses#create',
         'subjects':'subjects#index',
         'subjects/:id/':'subjects#show',

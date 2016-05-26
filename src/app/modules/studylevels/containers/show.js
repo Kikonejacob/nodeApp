@@ -1,5 +1,5 @@
 import React,{Component,PropTypes} from 'react';
-import Panel from 'components/panel/panel.jsx';
+import Panel from 'components/panel/panel';
 import List from 'components/list/List';
 import InlineList from 'components/InlineList/InlineList';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ class Form extends Component{
             return(
             	<div className="col-lg-12">
 
-        	    	<Panel title={data.name} configLink={String('/levels/:id/edit').replace('id',levelId)}>
+        	    	<Panel title={data.name} refLink={String('/levels/:id/edit').replace(':id',levelId)}>
         	    			<div>
 
         				    	<p>Name: <span>{data.name}</span></p>

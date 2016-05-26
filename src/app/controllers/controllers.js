@@ -14,7 +14,7 @@ export default {
 	 'studyclasses':studyclasses,
 	 'feeheads':feeheads,
 	 'levelfees':levelfees,
-	 	'subjects':subjects,
+	 'subjects':subjects,
 
 
 

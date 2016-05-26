@@ -1,4 +1,5 @@
 /**
+ * this function use closure and will return a function when objectToMerge is null
  * [merge merge the state with an object]
  * @param  {[array]} state              [description]
  * @param  {[type]} objectToMerge=null [description]

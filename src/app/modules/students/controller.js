@@ -10,10 +10,12 @@ import { Provider } from 'react-redux';
 import {getStudent,createStudent,updateStudent,deleteStudent,initStudentGrid} from './lib/actions.js';
 import {refreshGridOptions} from 'lib/grid/actions.js';
 import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
-import {listStudentTuitions} from 'modules/studentTuition/lib/actions';
+import {listStudentTuition} from 'modules/studentTuition/lib/actions';
+import {listStudentEnrollments} from 'modules/studentEnroll/lib/actions';
 
 
 const FORM_TITLE='Student';
+const FORM_SHOW_TITLE='Student';
 const FORM_CREATE_TITLE='Register a new student';
 const LIST_TITLE='Student list';
 const DELETE_CONFIRM='Are you sure you want to delete these items ?';
@@ -151,7 +153,8 @@ export default  class  {
                           <ShowForm />
                         </Provider>);
         this.registry.dispatch(getStudent(studentId));
-        this.registry.dispatch(listStudentTuitions(studentId));
+        this.registry.dispatch(listStudentTuition(studentId,'student.tuition'));
+        this.registry.dispatch(listStudentEnrollments(studentId,'student.enrollments'));
         //this.registry.dispatch(subjectsGet(levelId));
         this.registry.dispatch(updateActiveContainer({studentId}));
         this.registry.dispatch(loadContainer(Container));

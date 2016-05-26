@@ -1,50 +1,51 @@
-import * as reducers from 'modules/studylevels/lib/reducers.js';
+/* global expect */
+/* global sinon */
+
+
+import reducers from 'modules/studylevels/lib/reducers.js';
 import * as types from 'modules/studylevels/lib/actionTypes';
-import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
+import {RESTAPI_REQUEST,RESTAPI_RECEIVE} from 'lib/common/actionTypes';
+
 
 const reducer=reducers.levels;
 
 describe('level reducers', () => {
     it('should return the initial state', () => {
-         expect(
-              reducer(undefined, {})
-          ).toEqual([
-
-                  levels:{}
-
-          ]);
+        let  action={
+            type:'undefined'
+        };
+        expect(reducer([],action)).to.have.lengthOf(0);
     });
-    it('should return API_LEVEL_GET  request', () => {
+    it('should return API_LEVEL_GET  REQUEST', () => {
         let action={
             type:types.API_LEVEL_GET,
             status:RESTAPI_REQUEST,
+            levelId:2
         };
-         expect(
-              reducer(undefined, action)
-          ).toEqual([
-              {
-                  isFetching: true,
-                  items:[],
+        expect(reducer({}, action) ).to.deep.equal({
+            2:{isFetching: true,
+                  data:{},
                   didInvalidate: false,
-
               }
-          ]);
+          });
     });
-    it('should return API_LEVEL_GET ', () => {
+    it('should return API_LEVEL_GET RECEIVE ', () => {
         let action={
             type:types.API_LEVEL_GET,
-            status:RESTAPI_REQUEST,
+            status:RESTAPI_RECEIVE,
+            data:{},
+            levelId:2
         };
-         expect(
-              reducer(undefined, action)
-          ).toEqual([
-              {
-                  isFetching: true,
+        expect(
+              reducer([], action)
+          ).to.deep.equal({
+              2:{
+                  isFetching: false,
                   data:{},
                   didInvalidate: false,
 
               }
-          ]);
+          });
     });
 
 

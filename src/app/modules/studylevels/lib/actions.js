@@ -7,6 +7,11 @@ import {API_LEVEL_GET,API_LEVEL_CLASSES,
         API_LEVEL_SUBJECTS,API_LEVEL_FEES,API_LEVEL_DELETE,
         API_LEVEL_CREATE,API_LEVEL_SAVE} from './actionTypes.js';
 
+
+/**
+ * TODO: remove classesGet, feesGet,subjectsGet
+ */
+
 /*
     Study Classes  Access Actions
  */
@@ -40,6 +45,23 @@ export function subjectsGet(levelId) {
 
     };
 }
+
+/*
+    Study fees  Access Actions
+ */
+export function feesGet(levelId) {
+    return (dispatch, getState) => {
+        let state=getState();
+        const data =(state.levels[levelId])?state.levels[levelId].fees:{};
+        let url=URL_LEVEL_FEES;
+        url=url.replace(':id',levelId);
+        if (ShouldFetch(data, levelId)) {
+            return dispatch(APIgetFetch(url,API_LEVEL_FEES,{levelId}));
+        }
+
+    };
+}
+
 
 /*
   level information action
@@ -79,21 +101,6 @@ export function levelDelete(levelIds){
 
 };
 
-/*
-    Study fees  Access Actions
- */
-export function feesGet(levelId) {
-    return (dispatch, getState) => {
-        let state=getState();
-        const data =(state.levels[levelId])?state.levels[levelId].fees:{};
-        let url=URL_LEVEL_FEES;
-        url=url.replace(':id',levelId);
-        if (ShouldFetch(data, levelId)) {
-            return dispatch(APIgetFetch(url,API_LEVEL_FEES,{levelId}));
-        }
-
-    };
-}
 
 export function updateSelectedIds(level)
 {

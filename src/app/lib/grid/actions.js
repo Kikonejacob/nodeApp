@@ -1,10 +1,10 @@
 /**
  * these action allows us to interract with reduxgridFormView
- * TODO: merge refreshGrid and fetchGridCollection
+ *
  */
 
-
-import {getCollectionParams} from './gridActionsHelpers.js';
+import {initCollection} from '../collections/actions';
+//import {getCollectionParams} from '../collections/collectionHelpers.js';
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
 
 import {GRID_FETCH_COLLECTION,GRID_INIT_CONFIG,GRID_UPDATE_CONFIG,CHANGE_STATE} from './actionTypes';
@@ -24,7 +24,7 @@ let queryParams= {
 
 let initialPagingState={results: [],
           columns:[],
-          collectionOptions:{
+          /*collectionOptions:{
               'currentPage': 0,
               'totalRecords':0,
               'pageSize':10,
@@ -33,7 +33,7 @@ let initialPagingState={results: [],
               sortKey:null,
               'direction':-1,
               'queryParams':queryParams,
-          },
+          },*/
           'multiselect':false,
           'collectionMgr':null,
           'showFilter':true,
@@ -44,11 +44,14 @@ let initialPagingState={results: [],
 
 
 
-export function initGrid(gridName,url){
-    return {
-        gridName,
-        url,
-        type:GRID_INIT_CONFIG,
+export function initGrid(url,gridName){
+    return  (dispatch)=>{
+        dispatch(initCollection(gridName,url));
+        return dispatch({
+            type:GRID_INIT_CONFIG,
+            gridName,
+            url,
+        });
     };
 
 }
@@ -59,10 +62,10 @@ export function refreshGridOptions(options,gridName){
 
 
 
-
+/*
 export function fetchGridCollection(url,gridName){
     return (dispatch, getState) => {
-        dispatch(initGrid(gridName,url));
+        dispatch(initGrid(url,gridName));
         let state=getState().schGrids[gridName];
         console.log(state);
 
@@ -110,3 +113,4 @@ export function refreshGrid(collectionOptions,gridName){
     };
 
 }
+*/

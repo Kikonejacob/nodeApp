@@ -8,4 +8,6 @@ export const URL_CLASS_LIST='/api/studyclasses';
 export const URL_CLASS='/api/studyclasses/:id';
 export const URL_STUDENT='/api/students/:id';
 export const URL_STUDENTS='/api/students';
-export const URL_STUDENT_TUITIONS='api/students/:id/tuitions';
+export const URL_STUDENT_TUITION='api/students/:id/tuition';
+export const URL_STUDENT_ENROLLMENT='api/students/:id/enrollments';
+export const URL_ENROLLMENT='api/enrollments';
