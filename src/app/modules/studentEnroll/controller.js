@@ -1,5 +1,5 @@
 import stringRes from 'utils/stringRes';
-import List from './containers/list';
+import ListContainer from 'components/listForm/listC';
 //import DeleteList from './containers/delete';
 import Form from './containers/form';
 import ShowForm from './containers/show';
@@ -8,16 +8,21 @@ import React from 'react';
 
 import { Provider } from 'react-redux';
 import {getStudent,enroll,getEnrollmentInfo,CancelEnrollment,initStudentGrid} from './lib/actions.js';
-import {refreshGridOptions} from 'lib/grid/actions.js';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
+import {refreshGridOptions,initGridFromSchema} from 'lib/grid/actions.js';
+import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
 import {listStudentTuition} from 'modules/studentTuition/lib/actions';
 import {listStudentEnrollments} from 'modules/studentEnroll/lib/actions';
+import {initStudentEnrollmentsGrid}from './lib/actions';
+import * as listSchema from './schemas/enrollments.list.json';
+import * as classSchema from 'modules/studyclasses/schemas/classes.list.json';
 
 
+//Module form titles
 const FORM_TITLE='Student';
 const FORM_SHOW_TITLE='Student';
 const FORM_CREATE_TITLE='Register a new student';
-const LIST_TITLE='Student list';
+
+
 const DELETE_CONFIRM='Are you sure you want to delete these items ?';
 
 
@@ -26,26 +31,19 @@ export default  class  {
         this.services = servicesChannels('services');
         console.log('creating controller..');
         this.title = stringRes.studentBasic;
-        this.gridName='students.grid';
+        this.gridName=listSchema.name;
         this.registry=options.store;
         this.reducers=null;
         this.current = null;
     };
     handleIndexActions(action,selectedRowIds,dispatch){
         switch (action) {
-        case 'multiselect':
-            //console.log('ACT');
-            dispatch(refreshGridOptions({multiselect:true,selectedRowIds:[]},this.gridName));
-            break;
         case 'delete':
             let confirmResult=confirm(DELETE_CONFIRM);
             if (confirmResult==true)
             {
                 dispatch(deleteStudent(selectedRowIds));
             }
-            break;
-        case 'cancel_multiselect':
-            dispatch(refreshGridOptions({multiselect:false},this.gridName));
             break;
         default:
 
@@ -54,36 +52,51 @@ export default  class  {
     }
     /**
      * [index display list of level fees]
-     * @param  {[object]} options [receive levelId]
+     * @param  {object} options [receive levelId]
      * @return {[void]}         []
      */
     index(options)
     {
         this.current=null;
-        let header={ description:'index',
-                     onAction:this.handleIndexActions.bind(this)};
-        this.registry.dispatch(initStudentGrid(this.gridName));
+        this.registry.dispatch(initGridFromSchema(listSchema,{id:options[0]}));
 
 
-        let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
-        let Container= (<Provider store={this.registry}>
-                          <List collectionOptions={collectionOptions}
-                                gridName={this.gridName}
-                                urlgroup={this.current}
-                                {...header} />
-                        </Provider>);
+        //let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
+        let Container=ListContainer(this.registry,listSchema,
+                                        this.handleIndexActions.bind(this));
 
 
         //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(LIST_TITLE));
+        this.registry.dispatch(changeTitle(listSchema.title));
+    }
+    EnrollSearch(options){
+
+        this.current=null;
+        let classListSchema={...classSchema};
+        classListSchema.buttons=[];
+        classListSchema.target='#students/id/enroll/';
+        classListSchema.title='Enroll to a class';
+        classListSchema.mode='advancedSearch';
+        this.registry.dispatch(initGridFromSchema(classListSchema,{id:options[0]}));
+
+
+        //let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
+        let Container=ListContainer(this.registry,listSchema,
+                                        this.handleIndexActions.bind(this));
+
+
+        //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
+        this.registry.dispatch(loadContainer(Container));
+        this.registry.dispatch(changeTitle(listSchema.title));
+
     }
     /**
      * [handleEditSubmit handle user form control ]
      * @param  {event} e      [description]
      * @param  {object} data   [data  to be saved]
      * @param  {string} action [type of  action selected by user]
-     * @return {voided}        [description]
+     * @return {void}        [description]
      */
     handleCreateSubmit(e,data,action){
         switch(action)
@@ -99,8 +112,8 @@ export default  class  {
 
     /**
      * [create  create a new level fee]
-     * @param  {[object]} options [ passing levelId]
-     * @return {[void]}         []
+     * @param  {object} options  passing levelId
+     * @return {void}         []
      */
     create(options){
         let Container= (<Provider store={this.registry}>
@@ -108,7 +121,7 @@ export default  class  {
                         </Provider>);
         this.registry.dispatch(updateActiveContainer({studentId:-1}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_CREATE_TITLE));
+        this.registry.dispatch(changeTitle(FORM_CREATE_TITLE));
     }
 
     /**
@@ -116,7 +129,7 @@ export default  class  {
      * @param  {event} e      [description]
      * @param  {object} data   [data  to be saved]
      * @param  {string} action [type of  action selected by user]
-     * @return {voided}        [description]
+     * @return {void}        [description]
      */
     handleEditSubmit(e,data,action){
         switch(action)
@@ -143,7 +156,7 @@ export default  class  {
         this.registry.dispatch(getStudent(studentId));
         this.registry.dispatch(updateActiveContainer({studentId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_TITLE));
+        this.registry.dispatch(changeTitle(FORM_TITLE));
     }
 
     show(options){
@@ -158,6 +171,6 @@ export default  class  {
         //this.registry.dispatch(subjectsGet(levelId));
         this.registry.dispatch(updateActiveContainer({studentId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_SHOW_TITLE));
+        this.registry.dispatch(changeTitle(FORM_SHOW_TITLE));
     }
 }

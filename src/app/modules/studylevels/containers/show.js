@@ -30,7 +30,7 @@ class Form extends Component{
 
         			<Panel title="Classes">
         	  			<InlineList data={classes.items} captionField='name'
-                                  keyField='id' linkUrl='./#classes/:key/' />
+                                  keyField='id' linkUrl='./#classes/:key' />
 
 
         			</Panel>

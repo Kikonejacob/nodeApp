@@ -2,7 +2,7 @@
  * this unit is a helper for getting api data in a reduxgridFormView
  * It take some of the source code of pageableCollection  wich can be found at
  * https://github.com/backbone-paginator/backbone.paginator
- * 
+ *Line 74 is modified to accept object query
  */
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
 import * as _ from 'underscore' ;
@@ -25,7 +25,7 @@ function queryStringToParams (qs) {
 
 export function getCollectionParams(uri,state){
 
-    let url=uri|| "";
+    let url=uri|| '';
     //console.log(uri);
     let params={};
     // dedup query params
@@ -41,7 +41,11 @@ export function getCollectionParams(uri,state){
      _.omit(_.pick(state.queryParams, _.keys(state.queryParams)),
            'directions');
 
+
+
     _.each(queryParams, function (v, k) {
+
+
         if (state[k] != null && v != null && _.isUndefined(params[v])) {
             params[v] = state[k];
         }
@@ -63,11 +67,17 @@ export function getCollectionParams(uri,state){
     }
     else if (!state.sortKey) delete params[queryParams.order];
 
-    //console.log(state)
+
     if (state.query)
     {
-        //console.log("QUERRY");
-        params.query=state.query;
+        //In case query is a object of queries
+        if (typeof state.query=='object'){
+            params=_.extend(params,state.query);
+        }
+        else {
+            params.query=state.query;
+
+        }
     }
 
     params=_.omit(params,'url');

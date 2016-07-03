@@ -54,6 +54,7 @@ function schGrids(state={},action){
         return merge(state)(action.gridName,{...initialPagingState,
                                              url:action.url,
                                              collectionName:action.gridName,
+                                             ...action.options
                                          } );
     case GRID_FETCH_COLLECTION:
 

@@ -9,7 +9,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import {getStudent,createStudent,updateStudent,deleteStudent,initStudentGrid} from './lib/actions.js';
 import {refreshGridOptions} from 'lib/grid/actions.js';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
+import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
 import {listStudentTuition} from 'modules/studentTuition/lib/actions';
 import {listStudentEnrollments} from 'modules/studentEnroll/lib/actions';
 
@@ -76,7 +76,7 @@ export default  class  {
 
         //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(LIST_TITLE));
+        this.registry.dispatch(changeTitle(LIST_TITLE));
     }
     /**
      * [handleEditSubmit handle user form control ]
@@ -108,7 +108,7 @@ export default  class  {
                         </Provider>);
         this.registry.dispatch(updateActiveContainer({studentId:-1}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_CREATE_TITLE));
+        this.registry.dispatch(changeTitle(FORM_CREATE_TITLE));
     }
 
     /**
@@ -143,7 +143,7 @@ export default  class  {
         this.registry.dispatch(getStudent(studentId));
         this.registry.dispatch(updateActiveContainer({studentId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_TITLE));
+        this.registry.dispatch(changeTitle(FORM_TITLE));
     }
 
     show(options){
@@ -158,6 +158,6 @@ export default  class  {
         //this.registry.dispatch(subjectsGet(levelId));
         this.registry.dispatch(updateActiveContainer({studentId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_SHOW_TITLE));
+        this.registry.dispatch(changeTitle(FORM_SHOW_TITLE));
     }
 }

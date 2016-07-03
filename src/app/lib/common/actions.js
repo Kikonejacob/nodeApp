@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ModuleTitleView from 'components/TitleView/ModuleTitleView.js';
 import {DISPLAY_CONTAINER,UPDATE_ACTIVE_CONTAINER_INFO,
         CHANGE_TITLE,SET_CONTAINER_DUMPSTACK} from './actionTypes';
-
+import  services from '../../services/services';
 export  function updateActiveContainer(info){
 
     return {
@@ -22,7 +22,7 @@ export function loadContainer(Container)
     };
 }
 
-export function changetitle(newtitle){
+export function changeTitle(newtitle){
 
     ReactDOM.render(<ModuleTitleView title={newtitle} />,
                           document.getElementById('Module_title'));
@@ -40,4 +40,12 @@ export function setLocalContainerDumpStack(stack)
         dumpstack:stack
     };
 
+}
+
+export function changeRoute(path){
+    services.Router.route(path);
+    return{
+        type:changeRoute,
+        path:path
+    };
 }

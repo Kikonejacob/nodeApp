@@ -1,5 +1,5 @@
 /**
- * list grid:
+ * LIST GRID FOR LEVEL FEE:
  * react container for displaying a grid list of level fees:
  * schema: [fee_code,amount]
  * (c) 2016 kikone kiswendida
@@ -22,8 +22,7 @@ import { connect } from 'react-redux';
 const columns=['fee_code','amount'];
 
 const columnsMetaData=[
-    {
-        'columnName': "fee_code",
+    {   'columnName': "fee_code",
         'order': 1,
         'locked': false,
         'visible': true,

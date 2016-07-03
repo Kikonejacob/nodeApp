@@ -7,6 +7,10 @@ import {initGrid} from 'lib/grid/actions';
 import {fetchCollection,initCollection} from 'lib/collections/actions';
 
 
+export function DEFAULT_LEVELSUBJECTS_COLL_NAME(levelId){
+    return 'levels.'+levelId+'.levelfees';
+}
+
 /**
  * list level subjects
  * @param  {int} levelId        [Level id]

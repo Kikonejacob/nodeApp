@@ -10,7 +10,7 @@ import {levelfeeGet,levelfeeSave,levelfeeCreate,levelfeeDelete,
        levelfeesDelete,initLevelfeeGrid} from './lib/actions.js';
 import {refreshGridOptions} from 'lib/grid/actions.js';
 import {refreshCollection} from 'lib/collections/actions';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
+import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
 
 
 const API_URL='../api/levels/:id/fees';
@@ -77,7 +77,7 @@ export default  class  {
 
         this.registry.dispatch(updateActiveContainer({levelId:levelId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(LIST_TITLE));
+        this.registry.dispatch(changeTitle(LIST_TITLE));
     }
     /**
      * [handleEditSubmit handle user form control ]
@@ -110,7 +110,7 @@ export default  class  {
                         </Provider>);
         this.registry.dispatch(updateActiveContainer({feedCode:-1}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_CREATE_TITLE));
+        this.registry.dispatch(changeTitle(FORM_CREATE_TITLE));
     }
 
     /**
@@ -146,6 +146,6 @@ export default  class  {
         this.registry.dispatch(levelfeeGet(levelid,feeCode));
         this.registry.dispatch(updateActiveContainer({feeCode}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_TITLE));
+        this.registry.dispatch(changeTitle(FORM_TITLE));
     }
 }

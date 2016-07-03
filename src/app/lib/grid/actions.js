@@ -3,9 +3,11 @@
  *
  */
 
-import {initCollection} from '../collections/actions';
+import {initCollection,fetchCollection,createRawcollection} from '../collections/actions';
+
 //import {getCollectionParams} from '../collections/collectionHelpers.js';
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
+import {urlFormat}  from  'utils/urlHelper';
 
 import {GRID_FETCH_COLLECTION,GRID_INIT_CONFIG,GRID_UPDATE_CONFIG,CHANGE_STATE} from './actionTypes';
 
@@ -41,16 +43,76 @@ let initialPagingState={results: [],
           'uniqueID':'id'
         };
 
+/**
+ * Initilize and Normalize schema column metadata
+ * @param  {object} schema   The schema of the list
+ * @param  {function} dispatch redux store dispatch function
+ * @return {object}          return the Normalized selection
+ */
+function intializeSelectionOptions(schema,dispatch){
+    const listName=schema.name;
+    let selections=[]; // Store selections collection name
+    if (!schema.columnsMetaData) return ;
+
+    // request les selection options and assign the selections name
+    schema.columnsMetaData=schema.columnsMetaData.map(function(column){
+        const {selection}=column;
+        if (typeof column.selection!='object')return column;
+        //console.log(column);
+        if (selection){
+            let collectionName=listName+'-selections-'+column.columnName;
+            //console.log(collectionName);
+            switch (selection.optionsType) {
+            case 'url':
+                dispatch(initCollection(collectionName,selection.options));
+                dispatch(fetchCollection(collectionName,selection.options,null));
+                break;
+            default:
+                dispatch(createRawcollection(selection.options));
+                break;
+
+            };
+            selections.push(collectionName);
+            column.selection.collectionName=collectionName;
+            return column;
+        }
+        else
+        return column;
+    });
 
 
 
-export function initGrid(url,gridName){
+    return selections;
+
+}
+
+
+export function initGridFromSchema(schema,urlOptions){
+    return (dispatch)=>{
+        const {name,source,sourceType}=schema;
+        let url='';
+        if (sourceType=='url')
+        {
+            url=urlFormat(source,urlOptions);
+        }
+        const selectionCollectionNames=intializeSelectionOptions(schema,dispatch);
+        //console.log(selectionCollectionNames);
+        dispatch(initGrid(url,name,{selectionCollectionNames
+                                    ,schema,
+                                    urlOptions}));
+        return dispatch(fetchCollection(name,url));
+    };
+}
+
+
+export function initGrid(url,gridName,options={}){
     return  (dispatch)=>{
         dispatch(initCollection(gridName,url));
         return dispatch({
             type:GRID_INIT_CONFIG,
             gridName,
             url,
+            options
         });
     };
 

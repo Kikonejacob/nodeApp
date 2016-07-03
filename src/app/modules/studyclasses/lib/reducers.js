@@ -1,42 +1,56 @@
+/**
+ * Reducer for study classes actions
+ * (c) 2016 Kiswendsida Kikone
+ */
 import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
 import {API_LIST_STUDYCLASS,API_GET_STUDYCLASS,API_SAVE_STUDYCLASS,
        API_CREATE_STUDYCLASS,API_DELETE_STUDYCLASS} from './actionTypes.js';
+import {merge} from 'utils/stateHelper';
 
-function classesRequests(state={levels:{} },action)
+const intialState={};
+
+export default function studyclasses (state=intialState,action)
 {
     let isFetching=false;
     let data,extra={};
     switch(action.type)
     {
-    case API_LIST_STUDYCLASS:
+    case API_GET_STUDYCLASS:
         isFetching=(action.status==RESTAPI_REQUEST);
-        data=(isFetching)? {}: action.data;
-        extra=(isFetching)?{} : {lastUpdated:action.receivedAt};
-        return Object.assign({}, state,{[action.levelId]:{
-            ...state[action.levelId],
-            isFetching: isFetching,
-            data:data,
+        data=action.data;
+        if (isFetching){
+            extra={lastUpdated:action.receivedAt};
+        };
+        return merge(state)(action.classId,{
+            isFetching,
+            data,
+            ...extra,
             didInvalidate: false,
-        }
         });
         break;
     case API_SAVE_STUDYCLASS:
     case API_CREATE_STUDYCLASS:
         isFetching=(action.status==RESTAPI_REQUEST);
-        data=(isFetching)? {}: action.data;
-        extra=(isFetching)?{} : {lastSave:action.savedAt};
-        return Object.assign({}, state,{[action.levelId]:{
+        data=action.data;
+        if (isFetching){
+            extra={lastSave:action.savedAt};
+        };
+        return merge(state)(action.classId,{
+            isFetching: isFetching,
+            ...extra,
+            didInvalidate: false,});
+        /*return Object.assign({}, state,{[action.levelId]:{
             ...state[action.levelId],
             isFetching: isFetching,
-            didInvalidate: false,
-        }
-        });
+            extra,
+            didInvalidate: false,}
+        });*/
     case API_DELETE_STUDYCLASS:
         isFetching=(action.status==RESTAPI_REQUEST);
         if (isFetching)
         {
-            return Object.assign({}, state,{[action.levelId]:{
-                ...state[action.levelId],
+            return Object.assign({}, state,{[action.classId]:{
+                ...state[action.classId],
                 isFetching: true,
                 didInvalidate: false,
             }
@@ -52,8 +66,3 @@ function classesRequests(state={levels:{} },action)
 
     }
 }
-
-export default{
-
-    classesRequests
-};

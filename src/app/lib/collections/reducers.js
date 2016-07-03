@@ -18,9 +18,9 @@ const queryParams= {
 };
 
 const  collectionOptions={
-    'currentPage': 0,
+    'currentPage': 1,
     'totalRecords':0,
-    'pageSize':10,
+    'pageSize':15,
     'totalPages': 0,
     'mode':'server',
     'sortKey':null,

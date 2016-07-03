@@ -1,3 +1,7 @@
+/**
+ * TODO obsolete component to be removed after correcting
+ *  	the container in  modules/studyclasses/container/list
+ */
 import React from 'react';
 import getLabelOfOption from 'utils/helper.js';
 
@@ -13,4 +17,3 @@ render(){
 };
 
 }
-

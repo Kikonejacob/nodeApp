@@ -9,7 +9,7 @@ import PageableCollection from 'utils/pageableCollection';
 import React from 'react';
 import { Provider } from 'react-redux';
 import {levelGet,levelCreate,subjectsGet,feesGet,classesGet,levelSave,levelDelete} from './lib/actions.js';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
+import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
 import reducers from './reducers';
 import {listLevelClasses} from 'modules/studyclasses/lib/actions';
 import {listLevelFees} from 'modules/levelfees/lib/actions';
@@ -115,7 +115,7 @@ export default  class  {
 
         this.registry.dispatch(updateActiveContainer({}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_DELETE_TITLE));
+        this.registry.dispatch(changeTitle(FORM_DELETE_TITLE));
 
       /*
         this.selectedIds=[];
@@ -139,7 +139,7 @@ export default  class  {
                         </Provider>);
         this.registry.dispatch(updateActiveContainer({levelId:-1}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_CREATE_TITLE));
+        this.registry.dispatch(changeTitle(FORM_CREATE_TITLE));
 
 
     }
@@ -157,7 +157,7 @@ export default  class  {
         this.registry.dispatch(classesGet(levelId));
         this.registry.dispatch(updateActiveContainer({levelId:levelId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_SHOW_TITLE));
+        this.registry.dispatch(changeTitle(FORM_SHOW_TITLE));
     }
     HandleEditSubmit(e,data,action){
         switch(action)
@@ -193,7 +193,7 @@ export default  class  {
         this.registry.dispatch(levelGet(levelId));
         this.registry.dispatch(updateActiveContainer({levelId:levelId}));
         this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_EDIT_TITLE));
+        this.registry.dispatch(changeTitle(FORM_EDIT_TITLE));
     }
     configure(){
 

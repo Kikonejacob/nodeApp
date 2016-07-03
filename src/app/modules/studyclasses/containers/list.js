@@ -41,23 +41,19 @@ export default class extends React.Component{
 
 
 
-render(){
+    render(){
 
+        let {title,description,onAction}=this.props;
 
-    let {title,description,onAction}=this.props;
+        return(<div>
 
-    
+                 <Header title= {title} description={description}>
+                    <Button link='#classes/create' action='new'>New</Button>
+                    <Button link='#classes/delete' action='delete...'>Delete...</Button>
+                 </Header>
+    		     <GridView {...this.props} columns={columns} columnMetadata={columnsMetaData}  />
+    			</div>);
 
-    return(<div>
-
-             <Header title= {title} description={description}>
-                <Button link='#classes/create' action='new'>New</Button>
-                <Button link='#classes/delete' action='delete...'>Delete...</Button>
- 
-             </Header>
-		     <GridView {...this.props} columns={columns} columnMetadata={columnsMetaData}  />
-			</div>);
-
-};
+    };
 
 }

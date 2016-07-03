@@ -4,11 +4,25 @@ import {APIgetFetch,ShouldFetch,APIpostFetch,APIputFetch,
         APIdeleteFetch} from 'utils/asyncHelper';
 import {URL_STUDENT_ENROLLMENT,URL_STUDENT_ENROLLMENTS} from 'lib/apiUrlconst';
 import {initCollection,fetchCollection} from 'lib/collections/actions';
+import {initGrid} from 'lib/grid/actions';
 
+/* Intialize the grid component  that shows a list of student enrollments
+* @param  {string} gridName The name of grid
+* @return {void}
+*/
+export function initStudentEnrollmentsGrid(gridName){
+
+    return(dispatch)=>{
+        let url=URL_STUDENT_ENROLLMENTS;
+        dispatch(initGrid(url,gridName));
+        return dispatch(fetchCollection(gridName,url));
+    };
+
+}
 
 export function listStudentEnrollments(studentId,collectionName){
     return (dispatch) => {
-        let url=URL_STUDENT_ENROLLMENT;
+        let url=URL_STUDENT_ENROLLMENTS;
         url=url.replace(':id',studentId);
         if (collectionName==undefined){
             collectionName='student.${studentId}.enrollments';

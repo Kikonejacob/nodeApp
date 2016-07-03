@@ -1,3 +1,7 @@
+/**
+ *  Actions for level fees
+ */
+
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
 import {URL_LEVEL_FEE,URL_LEVEL_FEES}from 'lib/apiUrlconst';
 import {API_SAVE_LEVEL_FEE,API_GET_LEVEL_FEE,API_CREATE_LEVEL_FEE
@@ -6,6 +10,11 @@ import {API_SAVE_LEVEL_FEE,API_GET_LEVEL_FEE,API_CREATE_LEVEL_FEE
 import {initGrid} from 'lib/grid/actions';
 import {fetchCollection} from 'lib/collections/actions';
 import {initCollection} from 'lib/collections/actions';
+
+
+export function DEFAULT_LEVELFEE_COLL_NAME(levelId){
+    return 'levels.'+levelId+'.levelfees';
+}
 
 /**
  * list level fees
@@ -18,7 +27,7 @@ export function listLevelFees(levelId,collectionName){
         let url=URL_LEVEL_FEES;
         url=url.replace(':id',levelId);
         if (collectionName==undefined){
-            collectionName='levels.${levelId}.levelfees';
+            collectionName=DEFAULT_LEVELFEE_COLL_NAME(levelId);
         }
         dispatch(initCollection(collectionName,url));
         dispatch(fetchCollection(collectionName,url));

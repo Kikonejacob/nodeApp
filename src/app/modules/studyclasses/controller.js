@@ -10,12 +10,15 @@ import { Provider } from 'react-redux';
 import RestData from 'utils/restdata';
 import {isNumber} from 'utils/miscHelper';
 import {listLevels,listBranches} from './helper.js';
-import {listLevelClasses} from 'modules/studyclasses/lib/actions';
+import {getStudyClass} from './lib/actions';
+import {listLevelSubjects} from 'modules/levelsubjects/lib/actions';
 import {listLevelFees} from 'modules/levelfees/lib/actions';
-import {listLevelSubjects} from 'modules/levelfees/lib/actions';
 import {levelGet} from 'modules/studylevels/lib/actions';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
+import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
 import ShowForm from './containers/show';
+import {initGridFromSchema} from 'lib/grid/actions.js';
+import ListContainer from 'components/listForm/listC';
+import * as classListSchema from './schemas/classes.list.json';
 
 const API_URL='../api/classes';
 const FORM_SHOW_TITLE='Class';
@@ -74,9 +77,8 @@ export default  class  {
     constructor(options){
 
         this.services = servicesChannels('services');
-        this.name='studyclasses'
-        console.log('creating study class controller..');
-        this.services.trigger('change-title','Study classes');
+        this.name='studyclasses';
+        console.log('creating study class Study classes');
         this.registry=options.store;
 
         this.title = stringRes.studentBasic;
@@ -84,10 +86,14 @@ export default  class  {
         this.current = null;
 
     };
+    handleIndexActions(){
 
-    index(args)
+    }
+
+    index(options)
     {
-        const LEVEL_API_URL='/api/levels';
+        /*const LEVEL_API_URL='/api/levels';
+        const args=options
         let api=API_URL;
         let levelId=args[0];
 
@@ -99,6 +105,20 @@ export default  class  {
         let  Rendered=(<List  collection={collection}/>);
 
         this.services.trigger('load-content',Rendered,'react');
+        */
+        this.current=null;
+        this.registry.dispatch(initGridFromSchema(classListSchema,{id:options[0]}));
+
+
+        //let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
+        let Container=ListContainer(this.registry,classListSchema,
+                                        this.handleIndexActions.bind(this));
+
+
+        //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
+        this.registry.dispatch(loadContainer(Container));
+        this.registry.dispatch(changeTitle(classListSchema.title));
+
     }
     delete(){
 
@@ -174,17 +194,24 @@ export default  class  {
     }
 
     show(options){
-        let levelId=options[0];
-        this.current=levelId;
+        const {dispatch}=this.registry;
+        let classId=options[0];
+        this.current=classId;
         let Container= (<Provider store={this.registry}>
                           <ShowForm />
                         </Provider>);
-        this.registry.dispatch(levelGet(levelId));
-        //this.registry.dispatch(subjectsGet(levelId));
-        this.registry.dispatch(listLevelFees(levelId));
-        this.registry.dispatch(updateActiveContainer({levelId:levelId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_SHOW_TITLE));
+        /* In this cas we want to get study class informations and wait for the async api
+          call to be processed by the reducer before we continue */
+        Promise.all([dispatch(getStudyClass(classId))]).then(()=>{
+            let levelId=this.registry.getState().classes[classId].data.levelId;
+            dispatch(changeTitle(FORM_SHOW_TITLE));
+            //dispatch(levelGet(levelId));
+            //this.registry.dispatch(subjectsGet(levelId));
+            dispatch(listLevelFees(levelId));
+            dispatch(updateActiveContainer({classId,levelId}));
+            dispatch(loadContainer(Container));
+
+        });
 
     }
 

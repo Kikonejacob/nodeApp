@@ -1,12 +1,16 @@
+/**
+ * Reducer for level fees
+ */
+
 import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
 import {API_GET_LEVEL_FEE,API_SAVE_LEVEL_FEE, API_CREATE_LEVEL_FEE,
       API_DEL_LEVEL_FEES,API_DEL_LEVEL_FEE} from './actionTypes';
 
 
 
+const initialState={levelfees:[]};
 
-
-function levelfees(state={levelfees:[] },action)
+function levelfees(state=initialState,action)
 {
     let isFetching=false;
     let data,extra={};
