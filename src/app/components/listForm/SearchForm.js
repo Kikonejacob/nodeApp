@@ -1,4 +1,3 @@
-import List from 'components/listForm/list';
 import React from 'react';
 import Subschema,{ Form, loader, ValueManager } from 'subschema';
 import { Provider } from 'react-redux';
@@ -7,6 +6,7 @@ import { Provider } from 'react-redux';
 export default class extends React.Component{
 
     handleSubmit(e,error,data){
+        e.preventDefault() ;
         let action=this.pressed;
         if (action=='cancel') action='CancelAdvancedSearch';
         if (action=='submit') action='runAdvancedSearch';

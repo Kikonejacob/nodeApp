@@ -13,15 +13,23 @@ import ProgressDialog from 'components/ProgressDialog/progressDialog';
 
 import {DEFAULT_LEVELFEE_COLL_NAME} from 'modules/levelfees/lib/actions';
 import Button from 'components/LinkComponent/LinkButtonView';
-import {changeTitle} from 'lib/common/UIActions'
+import {changeTitle} from 'lib/common/UIActions';
+import ButtonGroup from 'components/ButtonsGroup/ButtonsGroup';
 
+const LINK_CLASS_EDIT='#classes/:id/edit';
+const LINK_LIST_LEVEL_FEES='./#studylevels/:id/fees';
+const LINK_LEVEL_FEES='./#studylevels/:id/fees/:key';
 
+const DEFAULT_BUTTONS=[
+    {caption:'Delete',action:'delete'},
+    {caption:'Edit',action:'edit'}
+];
 class Form extends Component{
 
     handleActions(e,action){
 
         if (this.props.onAction){
-            this.props.onAction(action);
+            return this.props.onAction(action);
         }
     }
     componentDidMount(){
@@ -35,32 +43,22 @@ class Form extends Component{
             return (<ProgressDialog> Please wait ....</ProgressDialog>);
         else
         {
-            const {fees,data,buttons}=this.props;
-            let levelId=data.id;
-            let feeUrl='./#studylevels/:id/fees/:key';
-            let FooterRender,FeesRender='';
 
-            if (buttons){
-                let i=0;
-                FooterRender= (<div>
-                    {buttons.map((button)=>{
-                        return (<Button link='#'
-                                 onLinkAction={this.HandleActions.bind(this)}
-                                 action={button.action}
-                                 key={`button.${i++}`}
-                                >
-                                  {button.caption}
-                                </Button>);
-                    })}
-                 </div>);
-            }
+            const {fees,data}=this.props;
+            const buttons=(this.props.buttons)?this.props.buttons:DEFAULT_BUTTONS;
+            let levelId=data.id;
+            let feeUrl=LINK_LEVEL_FEES;
+            let FeesRender='';
+            let FooterRender=<ButtonGroup buttons={buttons} />;
+
 
 
 
             if (fees.items)
             {
-                FeesRender=(<Panel title="Fees and tuitions">
-                            <List data={fees.items}  captionField='fee_code'
+                FeesRender=(<Panel title="Fees and tuitions"
+                                   refLink={String(LINK_LIST_LEVEL_FEES).replace(':id',levelId)} >
+                                <List data={fees.items}  captionField='fee_code'
                                     keyField='fee_code' linkUrl={feeUrl.replace(':id',levelId)}  />
 
                         </Panel>);
@@ -68,7 +66,7 @@ class Form extends Component{
             return(
             	<div className="col-lg-12">
 
-        	    	<Panel title={data.name} refLink={String('/studyclasses/:id/edit').replace(':id',levelId)}>
+        	    	<Panel title={data.name} refLink={String(LINK_CLASS_EDIT).replace(':id',levelId)}>
         	    			<div>
 
         				    	<p>Name: <span>{data.name}</span></p>
@@ -106,6 +104,7 @@ function mapStateToProps(state,ownProps) {
     const { isFetching,data} = classes[classId] || { isFetching: false,
                                                      data:{},
                                                     };
+
     /*const level=levels[data.levelId].data
     if (level==undefined) return {};*/
     let fees=collections[DEFAULT_LEVELFEE_COLL_NAME(data.levelId)];

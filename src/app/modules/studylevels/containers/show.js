@@ -20,7 +20,7 @@ class Form extends Component{
             return(
             	<div className="col-lg-12">
 
-        	    	<Panel title={data.name} refLink={String('/levels/:id/edit').replace(':id',levelId)}>
+        	    	<Panel title={data.name} refLink={String('/studylevels/:id/edit').replace(':id',levelId)}>
         	    			<div>
 
         				    	<p>Name: <span>{data.name}</span></p>

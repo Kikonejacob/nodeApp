@@ -14,7 +14,8 @@ export function RequireAuthentification(){
         dispatch(changeTitle('Login is required'));
         dispatch(loadContainer(Dialog));
         return{
-            type:REQUIRE_AUTHENTIFICATION
+            type:REQUIRE_AUTHENTIFICATION,
+            recentUrl:location.href
         };
     };
 
@@ -35,13 +36,14 @@ function AsyncLoginActionCreator(actionType,status,options){
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 7 // 1 week
         }));
+        location.replace('#'); // Redirecting
     }
     return {
         type:USER_LOGIN_SUCESS
     };
 }
-export function login(creditentials){
+export function login(creditentials,redirectTo){
     return(dispatch)=>{
-        return dispatch(APIpostFetch('api/auth',USER_LOGIN,{...creditentials},AsyncLoginActionCreator));
+        return dispatch(APIpostFetch('api/auth',USER_LOGIN,{...creditentials,redirectTo},AsyncLoginActionCreator));
     };
 }

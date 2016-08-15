@@ -5,15 +5,15 @@ import React from 'react';
 
 import { Provider } from 'react-redux';
 import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/actions';
-
+import Controller from 'lib/common/controller';
 
 //Module form titles
 const FORM_TITLE='Login';
 
 
-export default  class  {
+export default  class extends Controller  {
     constructor(options){
-
+        super(options);
         console.log('login controller..');
         this.title = stringRes.studentBasic;
         this.registry=options.store;
@@ -24,11 +24,7 @@ export default  class  {
     index(options){
         let studentId=options[0];
         this.current=null;
-        let Container= (<Provider store={this.registry}>
-                          <LoginForm />
-                        </Provider>);
-        this.registry.dispatch(updateActiveContainer({studentId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(FORM_TITLE));
+        this.uiCtl.loadContainer(  <LoginForm uiCtrl={this.uiCtl} />);
+        this.uiCtl.changeTitle(FORM_TITLE);
     }
 }

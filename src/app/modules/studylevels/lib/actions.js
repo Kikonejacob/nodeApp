@@ -8,6 +8,33 @@ import {API_LEVEL_GET,API_LEVEL_CLASSES,
         API_LEVEL_CREATE,API_LEVEL_SAVE} from './actionTypes.js';
 
 
+import {initGrid} from 'lib/grid/actions';
+import {fetchCollection,initCollection} from 'lib/collections/actions';
+
+
+export function DEFAULT_LEVEL_COLL_NAME(){
+    return 'levels';
+}
+
+
+/**
+ * list study levels
+ * @return function               Async action function
+ */
+export function listLevels(collectionName){
+    const collection=(collectionName)?collectionName:DEFAULT_LEVEL_COLL_NAME();
+
+    return (dispatch) => {
+        let url=URL_LEVEL_LIST;
+        if (collectionName==undefined){
+            collectionName=DEFAULT_LEVEL_COLL_NAME();
+        }
+        dispatch(initCollection(collection,url));
+        return dispatch(fetchCollection(collection,url));
+    };
+
+}
+
 /**
  * TODO: remove classesGet, feesGet,subjectsGet
  */

@@ -1,11 +1,12 @@
 import {merge} from 'utils/stateHelper';
-import {USER_LOGIN_FAIL,USER_LOGIN_SUCCESS,RESET_LOGING_ATTEMPTS} from './actionTypes';
+import {USER_LOGIN_FAIL,USER_LOGIN_SUCCESS,RESET_LOGING_ATTEMPTS,REQUIRE_AUTHENTIFICATION} from './actionTypes';
 
 
 const defaultAuth={
     isAuthenticated:false,
     attempts:0,
-    userId:-1
+    userId:-1,
+    redirectTo:''
 };
 
 export default function auth(state=defaultAuth,action){
@@ -19,6 +20,9 @@ export default function auth(state=defaultAuth,action){
         break;
     case RESET_LOGING_ATTEMPTS:
         return merge(state,{attempts:0});
+        break;
+    case REQUIRE_AUTHENTIFICATION:
+        return merge(state,{redirectTo:action.recentUrl});
         break;
     default:
         return  state;

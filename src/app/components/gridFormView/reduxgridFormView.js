@@ -30,114 +30,38 @@ export function getGridCustomComponent(componentname){
     return customComponents[componentname];
 
 }
-var SchGridView = React.createClass({
+const  SchGridView = React.createClass({
 
-    componentDidMount: function(){
-    if (!this.props.DoNotManageCollection)  {
-    //  this.props.collectionMgr(COLLECTION_FETCH);
-    }
-    /* this.getExternalData();
-     //TODO: find a way for selecting
-    // servicesChannels('services').on('getdata',this.go.bind(this))
-     this.props.dispatch()*/
+    externalSetPage: function(index){
+        var index = index + 1;
+        this.props.collectionMgr(COLLECTION_SET_PAGE,{currentPage:index},this.props);
     },
-    componentWillReceiveProps:function(nextProps){
-        //console.log(nextProps);
-
+    changeSort: function(sort, sortAscending){
+        this.props.collectionMgr(COLLECTION_SORT,{sorkey:sort,direction:sortAscending});
     },
-    getExternalData: function(stateInfo=null){
-        this.props.dispatch()
-        $.when(this.props.collection.fetch())
-       .done(function(response){
+    setFilter: _.debounce(function(filter){
+        this.props.collectionMgr(COLLECTION_FILTER,{query:filter});
+    },800),
+    setPageSize: function(size){
+        this.props.collectionMgr(COLLECTION_SETPAGE_SIZE,{pageSize:size});
+    },
 
-           let collection=this.props.collection;
-           console.log('maxPage'+response.last_page);
-           let state={
-               results: response.data,
-               currentPage: response.current_page - 1,
-               maxPages: response.last_page,
-               externalResultsPerPage: response.per_page,
-               externalSortColumn: 'id',
-               externalSortAscending: null
-           };
-           if (stateInfo!==undefined)
-           {
-               _.extend(state,stateInfo);
-           }
-           this.setState(state);
+    getcolums:function(){
 
+        return this.props.columns;
+    },
 
-        }.bind(this));
-  },
-  externalSetPage: function(index){
-    var index = index + 1;
-    this.props.collectionMgr(COLLECTION_SET_PAGE,{currentPage:index},this.props);
+    getcolumsMeta:function(){
 
-    /*
-    var col=this.props.collection;
-    console.log([col.state.firstPage,col.state.currentPage,col.state.totalPages]);
-    this.props.collection.getPage(index);
-    this.getExternalData();*/
-  },
-  changeSort: function(sort, sortAscending){
-    this.props.collectionMgr(COLLECTION_SORT,{sorkey:sort,direction:sortAscending});
-    /*
-    var order;
-    if (this.props.collection.state.order === 1) {
-      order = -1
-    } else {
-      order = 1
-    }
-    var sortKey = sort;
-    this.props.collection.setSorting(sortKey, order);
-    this.getExternalData({externalSortAscending:sortAscending,
-                        externalSortColumn:sort});*/
-  },
-  setFilter: _.debounce(function(filter){
-     console.log('dffdf')
-    this.props.collectionMgr(COLLECTION_FILTER,{query:filter})
-  /*  this.props.collection.state.query = filter;
-    this.props.collection.getPage(1);
-    this.getExternalData();*/
-  },800),
-  setPageSize: function(size){
-    this.props.collectionMgr(COLLECTION_SETPAGE_SIZE,{pageSize:size})
-/*
-    let col=this.props.collection;
-    this.props.collection.setPageSize(size);
-    this.getExternalData();*/
-  },
+        let meta=[];
+        _.extend(meta,this.props.columnMetadata);
+        return meta;
+    },
 
+    go:function(){
 
-
-  getcolums:function(){
-
-    return this.props.columns;
-  },
-
-  getcolumsMeta:function(){
-
-    let meta=[];
-
-    /*if (this.props.multiselect)
-    {
-      meta.push({
-                columnName: 'selected',
-                cssClassName: 'selected',
-                visible: false,
-                displayName: '',
-                customComponent: SelectedComponent
-            })
-    }*/
-
-    _.extend(meta,this.props.columnMetadata);
-    return meta;
-  },
-
-  go:function(){
-
-    return this.ref.SchGrid.getSelectedRowIds();
-  },
+        return this.ref.SchGrid.getSelectedRowIds();
+    },
     render: function(){
 
         var multiselectProps={};
@@ -152,25 +76,21 @@ var SchGridView = React.createClass({
             };
         }
 
-        let {collectionOptions}=this.props;
-        //console.log(collectionOptions);
-
-
-
-        //return (<div className="table-responsive">
         return (<div className="col-lg-12" >
                 <Griddle ref='SchGrid' useExternal={true} externalSetPage={this.externalSetPage}
                     externalChangeSort={this.changeSort}
                     externalSetFilter={this.setFilter}
                     externalSetPageSize={this.setPageSize}
 
-                    externalMaxPage={collectionOptions.totalPages}
-                    externalCurrentPage={collectionOptions.currentPage}
-                    externalSortColumn={collectionOptions.sortKey}
+                    externalMaxPage={this.props.totalPages}
+                    externalCurrentPage={this.props.currentPage-1}
+                    externalResultsPerPage={this.props.pageSize}
+                    externalSortColumn={this.props.sortKey}
                     externalSortAscending={this.props.SortAscending==-1}
 
+                    enableInfiniteScroll={true}
+
                     results={this.props.results}
-                    resultsPerPage={this.props.pageSize}
 
                     useGriddleStyles={false}
                     showFilter={this.props.showFilter}
@@ -197,8 +117,13 @@ var SchGridView = React.createClass({
 SchGridView.propTypes = {
     collectionMgr: PropTypes.func.isRequired,
     multiselect:PropTypes.bool.isRequired,
-    collectionOptions:PropTypes.object.isRequired,
-    isFetching:PropTypes.bool
+    isFetching:PropTypes.bool,
+    /*page types*/
+    totalPages:PropTypes.number,
+    pageSize:PropTypes.number,
+    currentPage:PropTypes.number,
+    sortKey:PropTypes.string,
+    SortAscending:PropTypes.number
 };
 
 /**

@@ -17,10 +17,8 @@ export default function studyclasses (state=intialState,action)
     {
     case API_GET_STUDYCLASS:
         isFetching=(action.status==RESTAPI_REQUEST);
-        data=action.data;
-        if (isFetching){
-            extra={lastUpdated:action.receivedAt};
-        };
+        data=action.data||{};
+        extra=(isFetching)?{}:{lastUpdated:action.receivedAt};
         return merge(state)(action.classId,{
             isFetching,
             data,
@@ -31,10 +29,8 @@ export default function studyclasses (state=intialState,action)
     case API_SAVE_STUDYCLASS:
     case API_CREATE_STUDYCLASS:
         isFetching=(action.status==RESTAPI_REQUEST);
-        data=action.data;
-        if (isFetching){
-            extra={lastSave:action.savedAt};
-        };
+        data=action.data||{};
+        extra=(isFetching)?{}:{lastSave:action.savedAt};
         return merge(state)(action.classId,{
             isFetching: isFetching,
             ...extra,

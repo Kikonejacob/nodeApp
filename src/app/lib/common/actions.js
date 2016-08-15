@@ -4,8 +4,10 @@ import ModuleTitleView from 'components/TitleView/ModuleTitleView.js';
 import {DISPLAY_CONTAINER,UPDATE_ACTIVE_CONTAINER_INFO,
         CHANGE_TITLE,SET_CONTAINER_DUMPSTACK} from './actionTypes';
 import  services from '../../services/services';
-export  function updateActiveContainer(info){
+import { Provider } from 'react-redux';
 
+
+export  function updateActiveContainer(info){
     return {
         type:UPDATE_ACTIVE_CONTAINER_INFO,
         info:info
@@ -14,6 +16,7 @@ export  function updateActiveContainer(info){
 }
 export function loadContainer(Container)
 {
+
     console.log('loading react container...');
     ReactDOM.render(Container,
 		        document.getElementById('module_container'));
@@ -22,6 +25,11 @@ export function loadContainer(Container)
     };
 }
 
+export function loadConnectedContainer(Container,store)
+{
+    return loadContainer(<Provider store={store}>{Container}</Provider>);
+
+}
 export function changeTitle(newtitle){
 
     ReactDOM.render(<ModuleTitleView title={newtitle} />,

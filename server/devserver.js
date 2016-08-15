@@ -1,9 +1,10 @@
+const CONFIG=require( './env.config.json');
 const http = require('http');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 const url = require('url');
 const app = express();
-const API_SERVER='http://192.168.10.10/service';
+const API_SERVER=CONFIG.APIServer;//'http://192.168.10.10/service';
 const CookieParser = require('cookie-parser');
 const  bodyParser = require('body-parser');
 const  getRawBody = require('raw-body');

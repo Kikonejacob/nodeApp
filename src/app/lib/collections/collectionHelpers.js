@@ -6,6 +6,7 @@
  */
 import {ShouldFetch,APIgetFetch,APIdeleteFetch,APIpostFetch,APIputFetch} from 'utils/asyncHelper';
 import * as _ from 'underscore' ;
+import {QUERY_PARAMS_TO_SERVER} from './constantes';
 
 function queryStringToParams (qs) {
     var kvp, k, v, ls, params = {}, decode = decodeURIComponent;
@@ -36,10 +37,9 @@ export function getCollectionParams(uri,state){
     }
 
     // map params except directions
-    let queryParams = state.mode == 'client' ?
-     _.pick(state.queryParams, 'sortKey', 'order') :
-     _.omit(_.pick(state.queryParams, _.keys(state.queryParams)),
-           'directions');
+    let queryParams = (state.mode == 'client' || state.usePaging==false) ?
+     _.pick(QUERY_PARAMS_TO_SERVER, 'sortKey', 'order') :
+     _.omit(_.pick(QUERY_PARAMS_TO_SERVER, _.keys(QUERY_PARAMS_TO_SERVER)),'directions');
 
 
 
@@ -99,23 +99,20 @@ export function getCollectionParams(uri,state){
        @param {Object} state A copy of #state.
        @return {Object} A new (partial) state object.
      */
-export function parseServerState(resp, queryParams, state) {
-    if (resp && resp.length === 2 && _.isObject(resp[0]) && _.isArray(resp[1])) {
+export function parseServerState(resp, queryParams) {
+    let newState = {};
+    let serverState = _.omit(resp,'data');
+    _.each(_.pairs(_.omit(queryParams, 'directions')), function (kvp) {
+        var k = kvp[0], v = kvp[1];
+        var serverVal = serverState[v];
+        if (!_.isUndefined(serverVal) && !_.isNull(serverVal)) newState[k] = serverState[v];
+    });
 
-        let newState = {};
-        let serverState = _.omit(resp,'data');
-        _.each(_.pairs(_.omit(queryParams, 'directions')), function (kvp) {
-            var k = kvp[0], v = kvp[1];
-            var serverVal = serverState[v];
-            if (!_.isUndefined(serverVal) && !_.isNull(serverVal)) newState[k] = serverState[v];
-        });
-
-        if (serverState.order) {
-            newState.order = _.invert(queryParams.directions)[serverState.order] * 1;
-        }
-
-        return {...state,newState};
+    if (serverState.order) {
+        newState.order = _.invert(queryParams.directions)[serverState.order] * 1;
     }
+
+    return newState;
 };
 
 export  function fetchCollection(state,dispatch,url,actionType){

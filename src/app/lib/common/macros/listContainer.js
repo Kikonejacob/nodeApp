@@ -1,4 +1,4 @@
-import List from 'components/listForm/list';
+import List from 'lib/containers/listForm/list';
 import React from 'react';
 import { Provider } from 'react-redux';
 import {refreshGridOptions} from 'lib/grid/actions.js';

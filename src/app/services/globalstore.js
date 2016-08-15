@@ -7,7 +7,7 @@ export  function configureStore(initialState) {
  	 							initialState,
  	 							applyMiddleware(
 						        thunkMiddleware
-                       ),window.devToolsExtension ? window.devToolsExtension() : undefined
+                       ), window.devToolsExtension ? window.devToolsExtension() : f => f
     );
  	 store.asyncReducers = {};
  	 return store;

@@ -5,29 +5,29 @@ export default  class InlineList extends Component{
 
 
 
-render(){
+    render(){
 
 
-    let listNodes=this.props.data.map(function(item){
+        let listNodes=this.props.data.map(function(item){
 
-        let {captionField,keyField,linkUrl}=this.props;
-        let link=linkUrl.replace(':key',item[keyField]);
-        return (<li key={item.id}>
-                    <a href={link}>
-                    {item[captionField]}
-                    </a>
-                </li>);
+            let {captionField,keyField,linkUrl}=this.props;
+            let link=linkUrl.replace(':key',item[keyField]);
+            return (<li key={item.id}>
+                        <a href={link}>
+                        {item[captionField]}
+                        </a>
+                    </li>);
 
-    }.bind(this));
+        }.bind(this));
 
-    return (
-		<ul className='list-inline'>
-			{listNodes}
-		</ul>
-		);
+        return (
+    		<ul className='list-inline'>
+    			{listNodes}
+    		</ul>
+    		);
 
 
 
-}
+    }
 
 }

@@ -17,7 +17,7 @@ import Button from 'components/LinkComponent/LinkButtonView';
 import {refreshCollection} from 'lib/collections/actions';
 import {urlFormat}  from  'utils/urlHelper';
 import { connect } from 'react-redux';
-import SearchForm from './SearchForm';
+import SearchForm from 'components/listForm/SearchForm';
 
 
 const BT_CANCEL='Cancel';
@@ -287,6 +287,7 @@ function createListSearchSchema(listSchema,selections){
  */
 function NormalizeData(schema,data,selections){
     return data.map((item)=>{
+        let newItem={...item};
         schema.columnsMetaData.map((meta)=>{
             if (meta.selection){
                 //console.log(meta.selection.collectionName);
@@ -302,7 +303,8 @@ function NormalizeData(schema,data,selections){
                         return (record[selectionPrimaryField]==data);
                     });
 
-                    if (selection){
+                    if (selection!==undefined){
+
                         if (meta.selection.selectionFields){
                             let fields=meta.selection.selectionFields;
                             selection={
@@ -310,14 +312,15 @@ function NormalizeData(schema,data,selections){
                                 caption:selection[fields.caption]
                             };
                         };
-                        item[meta.columnName]=selection.caption;
+                        newItem[meta.columnName]=selection.caption;
                     }
                     else
-                        item[meta.columnName]='';
+                        if (newItem[meta.columnName]===undefined)
+                        { newItem[meta.columnName]='';}
                 }
             }
         });
-        return item;
+        return newItem;
     });
 }
 
@@ -326,7 +329,8 @@ function mapStateToProps(state,ownProps) {
     const {name,mode}=ownProps.schema;
     const {schGrids,collections} =state ;
     const GridInfo=schGrids[name];
-    const {items,options,isFetching}=collections[GridInfo.collectionName];
+    const {items,totalPages,currentPage,sortKey,
+           SortAscending,isFetching,pageSize}=collections[GridInfo.collectionName];
     const {multiselect,urlOptions,schema,advancedSearch,
            showFilter,showSettings,selectionCollectionNames}=GridInfo;
     let selections={};
@@ -334,7 +338,8 @@ function mapStateToProps(state,ownProps) {
 
     //Getting the selections from  collections state
     selectionCollectionNames.map(function(name){
-        selections[name]=[...collections[name].items];
+        const selection=collections[name].items;
+        selections[name]=[...selection];
     });
 
     //Normalize data if needed
@@ -342,18 +347,22 @@ function mapStateToProps(state,ownProps) {
         results=items;
     }
     else {
-        results=NormalizeData(schema,items,selections);
+
+        //results=items;
+        results=NormalizeData(schema,[...items],selections);
     }
+    //console.log(results);
 
     return {
         multiselect:multiselect||(mode=='multiselect'),
         results,
-        collectionOptions:options,
         selections,
         isFetching,
         urlOptions,
         advancedSearch:advancedSearch||(mode=='advancedSearch'),
-        showFilter,showSettings
+        showFilter,showSettings,
+        /*page informations*/
+        totalPages,currentPage,sortKey,SortAscending,isFetching,pageSize
     };
 }
 

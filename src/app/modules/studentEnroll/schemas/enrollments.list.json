@@ -8,7 +8,7 @@
    "columns":["class_name","payment_plan_name","acyear_name"],
    "buttons":{
        "default":[
-           {"caption":"Add","action":"new"},
+           {"caption":"New enrollment","action":"create"},
            {"caption":"Select", "action":"multiselect"},
            {"caption":"Advanced search ...", "action":"advancedSearch"}       ],
 
@@ -24,15 +24,8 @@
              "visible": true,
              "displayName": "Classe",
              "type":"Text",
-             "partialLink":"#classes/",
-             "customComponent": "LinkComponent",
-             "selection":{
-                         "reference":"classId",
-                         "options":"api/classes",
-                         "selectionFields":{"value":"id","caption":"name"},
-                         "optionsType":"url",
-                         "placeholder":"Select a class"
-                     }
+             "partialLink":"#students/:id/enrollments/",
+             "customComponent": "LinkComponent"
          },
          {
              "columnName": "acyear_name",

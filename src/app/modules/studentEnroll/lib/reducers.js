@@ -4,9 +4,10 @@
  */
 
 import {LIST_STUDENT_TUITIONS,API_GET_ENROLL,API_SET_ENROLL,API_DEL_ENROLL
-      ,REST_DEL_STUDENTS,REST_NEW_STUDENT} from './actionTypes.js';
+      ,API_ENROLL} from './actionTypes.js';
 import {RESTAPI_REQUEST} from 'lib/common/actionTypes';
 import {merge} from 'utils/stateHelper';
+import _ from 'lodash';
 
 
 export default function studentEnrollments(state={},action)
@@ -27,14 +28,18 @@ export default function studentEnrollments(state={},action)
             didInvalidate: false,
         });
         break;
-    case API_SET_ENROLL:
+    case API_ENROLL:
+        action.enrollId='new-record';
     case API_SET_ENROLL:
         isFetching=(action.status==RESTAPI_REQUEST);
-        data=(isFetching)? {}: action.data;
-        extra=(isFetching)?{} : {lastSave:action.savedAt};
+        data= (isFetching) ? {} : action.response.data;
+        extra=(isFetching) ? {} : {lastSave:action.savedAt};
+
         return merge(state)(action.enrollId,{
             isFetching,
             didInvalidate: false,
+            data,
+            responseInfo:_.omit(action.response,'data')
         });
         break;
     default:

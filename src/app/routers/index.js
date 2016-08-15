@@ -36,17 +36,23 @@ var AppRouter=Backbone.Router.extend ({
         'students/:id/edit':"students#edit",
         'students/admissions/add':'students#create',
         'students/:id/enrollments':'studentenroll#index',
+        'students/:id/enrollments/:id':'studentenroll#show',
+        'students/:id/enroll-search':'studentenroll#EnrollSearch',
+        'students/:id/enroll/:id':'studentenroll#enrollCheck',
+        'enrollements':'enrollments#index',
         'schoolinfo':'schoolinfo#show',
         'studylevels':'studylevels#index',
+        'studylevels/create':'studylevels#create',
         'studylevels/:id':'studylevels#show',
         'studylevels/:id/$edit':'studylevels#edit',
-        'studylevels/$create':'studylevels#create',
-        'studylevels/$delete':'studylevels#delete',
+
         'studylevels/:id/classes':'studyclasses#index',
         'classes':'studyclasses#index',
+        'classes/page/:id':'studyclasses#index',
+        'classes/create':'studyclasses#create',
         'classes/:id':'studyclasses#show',
         'classes/:id/edit':'studyclasses#edit',
-        'classes/create':'studyclasses#create',
+
         'subjects':'subjects#index',
         'subjects/:id/':'subjects#show',
         'subjects/create':'subjects#create',
@@ -89,6 +95,8 @@ var AppRouter=Backbone.Router.extend ({
     },
 
     execute:function(callback, args, name) {
+        console.log('ROUTTING EX');
+        console.log(name);
 
         this.responsiveRender();
         $('div.sidebar-nav').removeClass('in');

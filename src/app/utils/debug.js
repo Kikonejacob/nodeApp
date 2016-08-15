@@ -1,9 +1,7 @@
+/** log system
+   TODO Avoid log when we are in productions
 
-export default {
+ */
+const log = (type) => console.log.bind(console, type);
 
-
-		 log:function (content) {
-		   return  console.log(content);
-		}
-
-}
+export default {log};

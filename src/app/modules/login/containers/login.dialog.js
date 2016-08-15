@@ -9,13 +9,13 @@ export class LoginDialog  extends Component{
         event.preventDefault();
         const username=this.refs.username.value;
         const password=this.refs.password.value;
-        this.props.dispatch(login({username,password}));
+        this.props.dispatch(login({username,password},this.props.auth.redirectTo));
     }
     ComponentWillReceiveProps(nextProps){
 
-        if (nextProps.isAuthenticated){
-
-        }
+        /*if (nextProps.isAuthenticatecreditentialsd && nextProps.recentUrl!==''){
+            this.uiCtl.route(nextProps.recentUrl);
+        }*/
     }
 
     render(){

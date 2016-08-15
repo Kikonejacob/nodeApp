@@ -1,4 +1,3 @@
-import { Provider } from 'react-redux';
 import {changeRoute} from 'lib/common/actions';
 
 

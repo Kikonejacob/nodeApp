@@ -1,9 +1,7 @@
-import stringRes from 'utils/stringRes';
-import ListContainer from 'components/listForm/listC';
+import ListContainer from 'lib/common/macros/listContainer';
 //import DeleteList from './containers/delete';
 import Form from './containers/form';
 import ShowForm from './containers/show';
-import servicesChannels from 'services/servicesChannels';
 import React from 'react';
 
 import { Provider } from 'react-redux';
@@ -13,164 +11,120 @@ import {updateActiveContainer,loadContainer,changeTitle} from 'lib/common/action
 import {listStudentTuition} from 'modules/studentTuition/lib/actions';
 import {listStudentEnrollments} from 'modules/studentEnroll/lib/actions';
 import {initStudentEnrollmentsGrid}from './lib/actions';
+
+import {controllerCtl} from 'utils/controllerHelper';
 import * as listSchema from './schemas/enrollments.list.json';
 import * as classSchema from 'modules/studyclasses/schemas/classes.list.json';
-
+import Controller from 'lib/common/controller';
+import EnrollForm from './containers/enroll';
+import EnrollClassSearch from './containers/searchClasses';
+import List from './containers/list';
 
 //Module form titles
-const FORM_TITLE='Student';
+const FORM_TITLE='Student enrollements';
 const FORM_SHOW_TITLE='Student';
 const FORM_CREATE_TITLE='Register a new student';
 
 
 const DELETE_CONFIRM='Are you sure you want to delete these items ?';
+const STUDY_CLASS_CONTROLLER='studyclasses';
+
+const GRID_NAME='student.enrollments.grid';
+const CONTROLLER_NAME='student.enrollments.controller';
 
 
-export default  class  {
+export default  class  extends Controller {
     constructor(options){
-        this.services = servicesChannels('services');
-        console.log('creating controller..');
-        this.title = stringRes.studentBasic;
-        this.gridName=listSchema.name;
-        this.registry=options.store;
-        this.reducers=null;
-        this.current = null;
+        super(options);
+        this.name = options.controllerName||CONTROLLER_NAME;
+        this.schemas={listSchema,classSchema};
     };
-    handleIndexActions(action,selectedRowIds,dispatch){
-        switch (action) {
-        case 'delete':
-            let confirmResult=confirm(DELETE_CONFIRM);
-            if (confirmResult==true)
-            {
-                dispatch(deleteStudent(selectedRowIds));
-            }
-            break;
-        default:
-
-        }
-
-    }
     /**
-     * [index display list of level fees]
+     * Index display list of student enrollments
      * @param  {object} options [receive levelId]
      * @return {[void]}         []
      */
     index(options)
     {
-        this.current=null;
-        this.registry.dispatch(initGridFromSchema(listSchema,{id:options[0]}));
-
-
-        //let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
-        let Container=ListContainer(this.registry,listSchema,
-                                        this.handleIndexActions.bind(this));
-
-
-        //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(listSchema.title));
+        const studentId=options[0];
+        this.dispatch(initGridFromSchema(listSchema,{id:studentId}));
+        this.uiCtl.loadContainer(<List schema={this.schemas.listSchema} uiCtl={this.uiCtl} dataId={studentId} />);
+        /*let Container=ListContainer(this.registry,listSchema,
+                                        this.handleIndexActions.bind(this));*/
+        this.uiCtl.changeTitle(this.schemas.listSchema.title);
     }
+    UIEnrollSearch(Container,params){
+
+    }
+    /**
+     * Allows user to search for classes to enroll.
+     * @param {[type]} options [description]
+     */
     EnrollSearch(options){
+        const studentId=options[0];
+        var classController=controllerCtl(STUDY_CLASS_CONTROLLER,{store:this.registry});
+        const classListschema={...classController.schemas.ListSchema,
+                                buttons:[],
+                                target:'#students/:id/enroll/',
+                                title:'Enroll to a class',
+                                mode:'advancedSearch'
+        };
+        this.dispatch(initGridFromSchema(classListschema,{id:studentId}));
+        let Container=<EnrollClassSearch schema={classListschema} uiCtl={this.uiCtl} dataId={studentId} />;
+        this.uiCtl.loadContainer(Container);
+        this.uiCtl.changeTitle(classListschema.title);
 
-        this.current=null;
-        let classListSchema={...classSchema};
-        classListSchema.buttons=[];
-        classListSchema.target='#students/id/enroll/';
-        classListSchema.title='Enroll to a class';
-        classListSchema.mode='advancedSearch';
-        this.registry.dispatch(initGridFromSchema(classListSchema,{id:options[0]}));
+    }
+    UIenrollCheckLoader(Container,params){
+        const {containerInfo,classId,studentId}=params;
+        this.uiCtl.loadContainer((<EnrollForm classId={classId} studentId={studentId} uiCtl={this.uiCtl}>
+                                    {Container}
 
-
-        //let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
-        let Container=ListContainer(this.registry,listSchema,
-                                        this.handleIndexActions.bind(this));
-
-
-        //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(listSchema.title));
+                                </EnrollForm>),
+                                containerInfo
+                            );
+    }
+    enrollCheck(options){
+        const studentId=options[0];
+        const classId=options[1];
+        var classController=controllerCtl(STUDY_CLASS_CONTROLLER,{store:this.registry});
+        classController.uiCtl.setCustomContainerLoader(this.UIenrollCheckLoader.bind(this),{studentId,classId});
+        classController.show([classId],{buttons:[],
+                                    onAction:this.handleEnrollCheckActions});
 
     }
     /**
-     * [handleEditSubmit handle user form control ]
-     * @param  {event} e      [description]
-     * @param  {object} data   [data  to be saved]
-     * @param  {string} action [type of  action selected by user]
-     * @return {void}        [description]
+     * custom loader for Enrollment Informations
+     * Load the imported module controller result in the current controller
+     * @param {React.Component} Container Component to be loaded
+     * @param {object} params   paramaters
      */
-    handleCreateSubmit(e,data,action){
-        switch(action)
-        {
-        case 'cancel':
-            this.services.trigger('routeBack');
-            break;
-
-        case 'submit':
-            this.registry.dispatch(createStudent(data.levelid,data.id,data));
-        }
-    }
-
-    /**
-     * [create  create a new level fee]
-     * @param  {object} options  passing levelId
-     * @return {void}         []
-     */
-    create(options){
-        let Container= (<Provider store={this.registry}>
-                          <Form  data={{studentId:-1}} onSubmitForm={this.HandleCreateSubmit.bind(this)} />
-                        </Provider>);
-        this.registry.dispatch(updateActiveContainer({studentId:-1}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(FORM_CREATE_TITLE));
-    }
-
-    /**
-     * [handleEditSubmit handle user form control ]
-     * @param  {event} e      [description]
-     * @param  {object} data   [data  to be saved]
-     * @param  {string} action [type of  action selected by user]
-     * @return {void}        [description]
-     */
-    handleEditSubmit(e,data,action){
-        switch(action)
-        {
-        case 'cancel':
-            this.services.trigger('routeBack');
-            break;
-        case 'submit':
-            this.registry.dispatch(updateStudent(data.id,data));
-        }
+    UIEnrollInfoLoader(Container,params){
+        this.uiCtl.loadContainer((<ShowForm dataId={params.enrollId}>
+                                    {Container}
+                                </ShowForm>),
+                                params.containerInfo
+                            );
     }
     /**
-     * [edit edit dialog for level fees]
-     * @param  {[object]} options [url options]
-     * @return {[void]}         [description]
+     * Show description of the class enrolled and the
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
      */
-    edit(options){
-        //console.log(options);
-        let studentId=options[0];
-        this.current=studentId;
-        let Container= (<Provider store={this.registry}>
-                          <Form onSubmitForm={this.handleEditSubmit.bind(this)} />
-                        </Provider>);
-        this.registry.dispatch(getStudent(studentId));
-        this.registry.dispatch(updateActiveContainer({studentId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(FORM_TITLE));
-    }
-
     show(options){
-        let studentId=options[0];
-        this.current=studentId;
-        let Container= (<Provider store={this.registry}>
-                          <ShowForm />
-                        </Provider>);
-        this.registry.dispatch(getStudent(studentId));
-        this.registry.dispatch(listStudentTuition(studentId,'student.tuition'));
-        this.registry.dispatch(listStudentEnrollments(studentId,'student.enrollments'));
-        //this.registry.dispatch(subjectsGet(levelId));
-        this.registry.dispatch(updateActiveContainer({studentId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changeTitle(FORM_SHOW_TITLE));
+        const studentId=options[0];
+        const enrollId=options[1];
+        var classController=controllerCtl(STUDY_CLASS_CONTROLLER,{store:this.registry});
+        classController.uiCtl.setCustomContainerLoader(this.UIEnrollInfoLoader.bind(this),{enrollId});
+        Promise.all([
+            this.dispatch(getEnrollmentInfo(studentId,enrollId))
+        ]).then(()=>{
+            const classId=this.registry.getState().studentEnrollments[enrollId].data.classId;
+            classController.show([classId],{buttons:[]});
+        });
+
+
     }
+
+
 }

@@ -10,7 +10,7 @@ export function listStudentTuition(studentId,collectionName){
         let url=URL_STUDENT_TUITION;
         url=url.replace(':id',studentId);
         if (collectionName==undefined){
-            collectionName='student.${studentId}.enrollment';
+            collectionName='student.${studentId}.tuition';
         }
         dispatch(initCollection(collectionName,url));
         dispatch(fetchCollection(collectionName,url));

@@ -4,30 +4,28 @@ import React,{Component} from 'react';
 export default  class List extends Component{
 
 
+    render(){
 
-render(){
+        let listNodes=this.props.data.map(function(item){
 
+            let {captionField,keyField,linkUrl}=this.props;
+            let link=linkUrl.replace(':key',item[keyField]);
+            return (<li key={item.id}>
+                        <a href={link}>
+                        {item[captionField]}
+                        </a>
+                    </li>);
 
-    let listNodes=this.props.data.map(function(item){
+        }.bind(this));
 
-        let {captionField,keyField,linkUrl}=this.props;
-        let link=linkUrl.replace(':key',item[keyField]);
-        return (<li key={item.id}>
-                    <a href={link}>
-                    {item[captionField]}
-                    </a>
-                </li>);
-
-    }.bind(this));
-
-    return (
-		<ul className='list'>
-			{listNodes}
-		</ul>
-		);
+        return (
+    		<ul className='list'>
+    			{listNodes}
+    		</ul>
+    		);
 
 
 
-}
+    }
 
 }
