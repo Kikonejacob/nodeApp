@@ -2,7 +2,7 @@ import Radio from 'backbone.radio';
 
 
 
-function changetitle(){
+function changeTitle(){
 
 		
 

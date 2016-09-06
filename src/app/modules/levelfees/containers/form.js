@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 
 class Form extends Component{
     render(){
-        return(<div> <FormView formButtons={btSaveCancel} schema={schema}
+        return(<div>
+                  <FormView formButtons={btSaveCancel} schema={schema}
                   {...this.props} />
                </div>);
     }
@@ -34,9 +35,9 @@ function mapStateToProps(state) {
           lastUpdated,
           isFetching
       } = levelfees[activeContainer.feeCode]|| {
-              isFetching: false,
-              data:{},
-          };
+          isFetching: false,
+          data:{},
+      };
     return {
         data,
         isFetching,

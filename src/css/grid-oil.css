@@ -1,3 +1,90 @@
+
+	/*
+	This css file adapte griddle css to mobile
+
+
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+.table-bordered  tbody > tr > td{
+		border: none;
+
+		}
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		/*tr { border: 1px solid #ccc; }*/
+
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			/*border-bottom: 1px solid #eee;*/
+			position: relative;
+			padding-left: 50%;
+			border-top:0px;
+		}
+
+  	.sch-griddle-main-link{
+			font-weight: bold;
+			font-size: medium
+		}
+
+		.table-bordered  tbody > tr > td:before {
+			/*The internet, that's who.*/
+      /*font-weight: bold;*/
+
+      /* optional stuff to make it look nicer*/
+      /*width: 6.5em; /* magic number :( adjust according to your own content*/
+      display: inline-block;
+      /* end options*/
+
+      content: attr(data-th)"";/* who knew you could do this?*/
+		}
+
+
+
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+	body {
+		padding: 0;
+		margin: 0;
+	/*width: 320px;*/ }
+	}
+
+
+
+		td {	border:none;border-top:0px;}
+
+
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	body {
+		/*width: 495px; */
+	}
+}
+
+
+
 .griddle {
         th {
             cursor: pointer;

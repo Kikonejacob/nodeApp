@@ -1,0 +1,37 @@
+{
+   "source":"api/students",
+   "sourceType":"url",
+   "name":"students-list-grid",
+   "title":"Students list",
+   "description":"List of students.",
+   "columns":["caption","description","code"],
+   "buttons":{
+       "default":[
+           {"caption":"add","action":"Add"},
+           {"caption":"Select", "action":"multiselect"},
+           {"caption":"Advanced search ...", "action":"advancedSearch"}       ],
+
+      "multiselect":[
+           {"caption":"Delete Selected","action":"delete"}
+       ]
+   },
+"columnsMetaData":[{
+	    "columnName": "capiion",
+	    "order": 1,
+	    "locked": false,
+	    "visible": true,
+      "partialLink":"#students/",
+	    "displayName": "Name",
+      "customComponent": "LinkComponent"
+	},
+	  {
+	    "columnName": "description",
+	    "displayName": "Description"
+	  },
+	  {
+	    "columnName": "code",
+	    "displayName": "Code"
+	  }
+]
+
+}

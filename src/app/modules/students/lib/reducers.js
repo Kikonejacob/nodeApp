@@ -37,12 +37,12 @@ function students(state={},action)
         isFetching=(action.status==RESTAPI_REQUEST);
         data=(isFetching)? {}: action.data;
         extra=(isFetching)?{} : {lastUpdated:action.receivedAt};
-        console.log('PPPPPP');
+        /*console.log('PPPPPP');
         console.log(merge(state)(action.studentId,{
             isFetching,
             data,
             didInvalidate: false,
-        }));
+        }));*/
         return merge(state)(action.studentId,{
             isFetching,
             data,

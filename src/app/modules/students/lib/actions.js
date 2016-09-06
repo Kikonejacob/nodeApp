@@ -4,7 +4,8 @@ import {REST_GET_STUDENT,REST_SET_STUDENT,REST_DEL_STUDENT
 import {APIgetFetch,ShouldFetch,APIpostFetch,APIputFetch,
         APIdeleteFetch} from 'utils/asyncHelper';
 import {URL_STUDENT,URL_STUDENTS} from 'lib/apiUrlconst';
-import {fetchGridCollection} from 'lib/grid/actions';
+import {initGrid} from 'lib/grid/actions';
+import {fetchCollection} from 'lib/collections/actions';
 
 
 
@@ -15,8 +16,11 @@ import {fetchGridCollection} from 'lib/grid/actions';
  */
 export function initStudentGrid(gridName){
 
-    let url=URL_STUDENTS;
-    return fetchGridCollection(url,gridName);
+    return(dispatch)=>{
+        let url=URL_STUDENTS;
+        dispatch(initGrid(url,gridName));
+        return dispatch(fetchCollection(gridName,url));
+    };
 
 }
 

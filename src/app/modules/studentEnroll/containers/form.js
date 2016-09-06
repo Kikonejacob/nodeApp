@@ -7,12 +7,13 @@
  */
 import React,{Component,PropTypes}  from 'react';
 import   FormView,{btYesNoCancel,btSaveCancel} from 'components/FormView/form-view';
-import * as schema from './form.levelfees.schema.json' ;
+import * as schema from '../schemas/form.enrollments.schema.json' ;
 import { connect } from 'react-redux';
 
 class Form extends Component{
     render(){
-        return(<div> <FormView formButtons={btSaveCancel} schema={schema}
+        return(<div>
+                 <FormView formButtons={btSaveCancel} schema={schema}
                   {...this.props} />
                </div>);
     }

@@ -34,7 +34,7 @@ export default React.createClass( {
 
         for ( let i = startIndex; i < endIndex; i++ ) {
             let selected = this.props.currentPage === i ? 'active' : '';
-            pages.push( <li className={selected} ><a href="#" onClick={this.changeToPage(i)}>{i + 1}</a></li> );
+            pages.push( <li className={selected} key={`page-${i+1}`} ><a href="#" onClick={this.changeToPage(i)}>{i + 1}</a></li> );
         }
 
         return (

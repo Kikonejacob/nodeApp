@@ -3,11 +3,12 @@ import createReducer from 'lib/reducerUtils';
 import thunkMiddleware from 'redux-thunk';
 
 export  function configureStore(initialState) {
- 	 let store = createStore(createReducer(),
+ 	 const store = createStore(createReducer(),
  	 							initialState,
  	 							applyMiddleware(
 						        thunkMiddleware
-						     ));
+                       ), window.devToolsExtension ? window.devToolsExtension() : f => f
+    );
  	 store.asyncReducers = {};
  	 return store;
 }

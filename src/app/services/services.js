@@ -11,7 +11,7 @@ import studentsvc from './studentsService';
 import inscriptsvc from './inscript';*/
 
 
-export let registry=configureStore({});
+export const registry=configureStore({});
 
 
 export default function services() {

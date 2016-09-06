@@ -1,160 +1,87 @@
 import stringRes from 'utils/stringRes';
-import List from './containers/list';
-//import DeleteList from './containers/delete';
-import Form from './containers/form';
-import ShowForm from './containers/show';
-import servicesChannels from 'services/servicesChannels';
 import React from 'react';
+import Controller from 'lib/common/controller';
 
-import { Provider } from 'react-redux';
-import {getStudent,createStudent,updateStudent,deleteStudent,initStudentGrid} from './lib/actions.js';
-import {refreshGridOptions} from 'lib/grid/actions.js';
-import {updateActiveContainer,loadContainer,changetitle} from 'lib/common/actions';
-import {listStudentTuitions} from 'modules/studentTuition/lib/actions';
+//Containers
+import List from './containers/list';
+import Form from './containers/form';
+import ShowForm from './containers/showForm';
+
+//external actions
+import {listStudentTuition} from 'modules/studentTuition/lib/actions';
+import {listStudentEnrollments} from 'modules/studentEnroll/lib/actions';
+import {initGridFromSchema} from 'lib/grid/actions.js';
+
+//module json schemas
+import * as ShowSchema from './schemas/student.show.schema.json';
+import * as ListSchema from './schemas/student.list.schema.json';
+
+//module actions
+import {getStudent} from './lib/actions';
+
 
 
 const FORM_TITLE='Student';
+const FORM_SHOW_TITLE='Student';
 const FORM_CREATE_TITLE='Register a new student';
-const LIST_TITLE='Student list';
-const DELETE_CONFIRM='Are you sure you want to delete these items ?';
+
+const GRID_NAME='students.grid';
+const CONTROLLER_NAME=stringRes.studentBasic;
 
 
-export default  class  {
+export default  class extends Controller {
     constructor(options){
-        this.services = servicesChannels('services');
-        console.log('creating controller..');
-        this.title = stringRes.studentBasic;
-        this.gridName='students.grid';
-        this.registry=options.store;
-        this.reducers=null;
-        this.current = null;
+        super(options);
+        this.title = options.controllerName||CONTROLLER_NAME;
+        this.gridName=options.gridName||GRID_NAME;
+        this.schemas={ListSchema,ShowSchema};
     };
-    handleIndexActions(action,selectedRowIds,dispatch){
-        switch (action) {
-        case 'multiselect':
-            //console.log('ACT');
-            dispatch(refreshGridOptions({multiselect:true,selectedRowIds:[]},this.gridName));
-            break;
-        case 'delete':
-            let confirmResult=confirm(DELETE_CONFIRM);
-            if (confirmResult==true)
-            {
-                dispatch(deleteStudent(selectedRowIds));
-            }
-            break;
-        case 'cancel_multiselect':
-            dispatch(refreshGridOptions({multiselect:false},this.gridName));
-            break;
-        default:
-
-        }
-
-    }
     /**
-     * [index display list of level fees]
+     * index display list of level fees
      * @param  {[object]} options [receive levelId]
-     * @return {[void]}         []
+     * @return void
      */
     index(options)
     {
-        this.current=null;
-        let header={ description:'index',
-                     onAction:this.handleIndexActions.bind(this)};
-        this.registry.dispatch(initStudentGrid(this.gridName));
-
-
-        let {collectionOptions}=this.registry.getState().schGrids[this.gridName];
-        let Container= (<Provider store={this.registry}>
-                          <List collectionOptions={collectionOptions}
-                                gridName={this.gridName}
-                                urlgroup={this.current}
-                                {...header} />
-                        </Provider>);
-
-
-        //this.registry.dispatch(updateActiveContainer({levelId:levelId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(LIST_TITLE));
+        this.dispatch(initGridFromSchema(this.schemas.ListSchema,{id:options[0]}));
+        this.uiCtl.loadContainer(<List schema={this.schemas.ListSchema} uiCtl={this.uiCtl} />);
+        this.uiCtl.changeTitle(this.schemas.ListSchema.title);
     }
+
     /**
-     * [handleEditSubmit handle user form control ]
-     * @param  {event} e      [description]
-     * @param  {object} data   [data  to be saved]
-     * @param  {string} action [type of  action selected by user]
-     * @return {voided}        [description]
+     * create  create a new level fee
+     * @param  {object} options  passing levelId
+     * @return {void}
      */
-    handleCreateSubmit(e,data,action){
-        switch(action)
-        {
-        case 'cancel':
-            this.services.trigger('routeBack');
-            break;
-
-        case 'submit':
-            this.registry.dispatch(createStudent(data.levelid,data.id,data));
-        }
+    create(){
+        const studentId=-1;
+        const Container=(<Form data={{studentId:-1}} uiCtl={this.uiCtl} dataId={studentId} />);
+        this.uiCtl.loadContainer(Container,{studentId});
+        this.uiCtl.changeTitle(FORM_CREATE_TITLE);
     }
 
     /**
-     * [create  create a new level fee]
-     * @param  {[object]} options [ passing levelId]
-     * @return {[void]}         []
-     */
-    create(options){
-        let Container= (<Provider store={this.registry}>
-                          <Form  data={{studentId:-1}} onSubmitForm={this.HandleCreateSubmit.bind(this)} />
-                        </Provider>);
-        this.registry.dispatch(updateActiveContainer({studentId:-1}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_CREATE_TITLE));
-    }
-
-    /**
-     * [handleEditSubmit handle user form control ]
-     * @param  {event} e      [description]
-     * @param  {object} data   [data  to be saved]
-     * @param  {string} action [type of  action selected by user]
-     * @return {voided}        [description]
-     */
-    handleEditSubmit(e,data,action){
-        switch(action)
-        {
-        case 'cancel':
-            this.services.trigger('routeBack');
-            break;
-        case 'submit':
-            this.registry.dispatch(updateStudent(data.id,data));
-        }
-    }
-    /**
-     * [edit edit dialog for level fees]
-     * @param  {[object]} options [url options]
-     * @return {[void]}         [description]
+     * Edit edit dialog for level fees
+     * @param  {object} options Represent Url options
+     * @return {void}         description
      */
     edit(options){
-        //console.log(options);
-        let studentId=options[0];
-        this.current=studentId;
-        let Container= (<Provider store={this.registry}>
-                          <Form onSubmitForm={this.handleEditSubmit.bind(this)} />
-                        </Provider>);
-        this.registry.dispatch(getStudent(studentId));
-        this.registry.dispatch(updateActiveContainer({studentId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_TITLE));
+        const studentId=options[0];
+        const Container=(<Form dataId={studentId} uiCtl={this.uiCtl} />);
+        this.dispatch(getStudent(studentId));
+        this.uiCtl.loadContainer(Container,{studentId});
+        this.uiCtl.changeTitle(FORM_CREATE_TITLE);
     }
 
-    show(options){
-        let studentId=options[0];
-        this.current=studentId;
-        let Container= (<Provider store={this.registry}>
-                          <ShowForm />
-                        </Provider>);
-        this.registry.dispatch(getStudent(studentId));
-        this.registry.dispatch(listStudentTuitions(studentId));
-        //this.registry.dispatch(subjectsGet(levelId));
-        this.registry.dispatch(updateActiveContainer({studentId}));
-        this.registry.dispatch(loadContainer(Container));
-        this.registry.dispatch(changetitle(FORM_SHOW_TITLE));
+    show(options,props){
+        const studentId=options[0];
+        this.dispatch(getStudent(studentId));
+        this.dispatch(listStudentTuition(studentId,'student.tuition'));
+        this.dispatch(listStudentEnrollments(studentId,'student.enrollments'));
+        //this.dispatch(subjectsGet(levelId));
+        this.uiCtl.changeTitle(FORM_SHOW_TITLE);
+        this.uiCtl.loadContainer(<ShowForm schema={this.schemas.ShowSchema}
+                                          uiCtl={this.uiCtl}
+                                          {...props} />,{studentId});
     }
 }

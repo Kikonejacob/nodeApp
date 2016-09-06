@@ -1,7 +1,7 @@
 
 //import 'jquery';
 import bootstrap from 'bootstrap';
-import services from "./services/services";
+import services,{store} from "./services/services";
 
 //import RouterService from './services/RouterService';
 /*import './services/ModuleService';
@@ -25,5 +25,3 @@ var navigateTo = function(uid) {
 
 
 $(services.autorun());
-
-

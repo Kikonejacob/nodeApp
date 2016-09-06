@@ -1,177 +1,101 @@
-import  'babel-polyfill';
-import debug from 'utils/debug.js';
-import stringRes from 'utils/stringRes';
-import List,{columnsMetaData} from './containers/list';
-import Form,{schema} from './containers/form';
-import servicesChannels from 'services/servicesChannels';
-import PageableCollection from 'utils/pageableCollection';
 import React from 'react';
-import RestData from 'utils/restdata';
-import {isNumber} from 'utils/miscHelper';
-import {listLevels,listBranches} from './helper.js';
+import Controller from 'lib/common/controller';
+
+//Containers
+import List from './containers/list';
+import Form from './containers/form';
+import ShowForm from './containers/show';
+
+//external actions
+import {initGridFromSchema} from 'lib/grid/actions.js';
+import {listLevelSubjects} from 'modules/levelsubjects/lib/actions';
+import {listLevelFees} from 'modules/levelfees/lib/actions';
+import {listBranches} from 'modules/studyBranches/lib/actions';
+import {levelGet,listLevels} from 'modules/studylevels/lib/actions';
+
+//module json schemas
+import * as FormSchema from './schemas/form.class.json';
+import * as ListSchema from './schemas/classes.list.json';
+
+//module actions
+import {getStudyClass} from './lib/actions';
 
 
 
-const API_URL='../api/classes';
+const FORM_TITLE='Classe';
+const FORM_SHOW_TITLE='Classe';
+const FORM_CREATE_TITLE='Create a new class';
+
+const GRID_NAME='classes.grid';
+const CONTROLLER_NAME='classe.controller';
 
 
-export default  class schoolInfo {
-
-handleSubmit(e,data,action){
-
-    let services = servicesChannels('services');
-    console.log(data);
-
-    switch(action)
+export default  class extends Controller {
+    constructor(options){
+        super(options);
+        this.name = options.controllerName||CONTROLLER_NAME;
+        this.gridName=options.gridName||GRID_NAME;
+        this.schemas={ListSchema,FormSchema};
+    };
+    /**
+     * index display list of level fees
+     * @param  {[object]} options [receive levelId]
+     * @return void
+     */
+    index(options)
     {
-    case 'cancel':
-        services.trigger('routeBack');
-        break;
+        const page=(typeof Number(options[0])=='number' && options[0]!=='undefined')?Number(options[0]):1;
+        this.dispatch(initGridFromSchema(this.schemas.ListSchema,null,{currentPage:page}));
+        this.uiCtl.loadContainer(<List schema={this.schemas.ListSchema} uiCtl={this.uiCtl} />);
+        this.uiCtl.changeTitle(this.schemas.ListSchema.title);
+    }
 
-    case 'submit':
-        services.trigger('routeBack');
+    /**
+     * create  create a new level fee
+     * @param  {object} options  passing levelId
+     * @return {void}
+     */
+    create(){
+        const classId=-1;
+        const Container=(<Form rawSchema={this.schemas.FormSchema} data={{classId:-1}} uiCtl={this.uiCtl} dataId={classId} />);
+        this.dispatch(listBranches()),
+        this.dispatch(listLevels());
+        this.uiCtl.loadContainer(Container,{classId});
+        this.uiCtl.changeTitle(FORM_CREATE_TITLE);
+    }
 
+    /**
+     * Edit edit dialog for level fees
+     * @param  {object} options Represent Url options
+     * @return {void}         description
+     */
+    edit(options){
+        console.log('edit controller');
+        const classId=options[0];
+        this.dispatch(listBranches()),
+        this.dispatch(listLevels());
+        const Container=(<Form rawSchema={this.schemas.FormSchema} dataId={classId} uiCtl={this.uiCtl} />);
+        this.dispatch(getStudyClass(classId));
+        this.uiCtl.loadContainer(Container,{classId});
+        this.uiCtl.changeTitle(FORM_TITLE);
 
     }
 
-};
+    show(options,props){
+        const classId=options[0];
+        let Container= (<ShowForm {...props}/>);
+        /* In this cas we want to get study class informations and wait for the async api
+          call to be processed by the reducer before we continue */
+        Promise.all([
+            this.dispatch(getStudyClass(classId))
+        ]).then(()=>{
+            let levelId=this.registry.getState().classes[classId].data.levelId;
+            //this.dispatch(levelGet(levelId));
+            //this.dispatch(subjectsGet(levelId));
+            this.dispatch(listLevelFees(levelId));
+            this.uiCtl.changeTitle(FORM_SHOW_TITLE);
+            this.uiCtl.loadContainer(Container,{classId,levelId});
 
-handleActions(e,action){
-
-    switch (action){
-    case 'delete':
-
-        this.handleDelete(action) ;
-        break;
-
-
-    }
-
-
-}
-
-handleDelete(){//to do: find a way to
-
-
-    let confirmResult=confirm('Are you sure you want to delete these items ?');
-    if (confirmResult==true)
-    {
-
-        console.log(this.selectedIds)
-
-        console.log( this.Rendered.type.getdata());
-    }
-
-
-}
-
-constructor(){
-
-    this.services = servicesChannels('services');
-    console.log('creating study class controller..');
-    this.services.trigger('change-title','Study classes');
-
-    this.title = stringRes.studentBasic;
-
-    this.current = null;
-
-};
-
-index(args)
-{
-    const LEVEL_API_URL='/api/levels';
-    let api=API_URL;
-    let levelId=args[0];
-
-    if (isNumber(levelId))
-    {api=LEVEL_API_URL+'/'+levelId+'/classes';};
-
-    let collection=new PageableCollection({url:api});
-    let  Rendered=(<List  collection={collection}/>);
-
-    this.services.trigger('load-content',Rendered,'react');
-
-
-}
-delete(){
-
-    this.selectedIds=[];
-    let  collection=new PageableCollection({url:'../api/levels'});
-    let header={ description:'select the levels you want to delete and click on delete',
-                 onAction:this.handleActions.bind(this)};
-    this.Rendered=(<DeleteList {...header} collection={collection}
-                         multiselect={true} selectedIds={this.selectedIds} />);
-    this.services.trigger('load-content',this.Rendered,'react');
-
-
-
-}
-
-create(){
-
-
-    let data={};
-
-    return(<div> <Form data={data} onSubmitForm={this.handleSubmit}  />  </div>);
-
-
-}
-show(args){
-
-    var services=this.services;
-    let id=args[0];
-
-    this.services.trigger('change-title','Edit classe');
-    this.current=id;
-    this.model=new RestData({
-        channel:'student.info',
-        url:'../api/classes/'+this.current
-
-    });
-
-    schema.schema.levelId.disabled='true';
-
-    Promise.all([listLevels(),listBranches(),this.model.get()]).then(function(values){
-        let levels=values[0];
-        let branchs=values[1];
-        let restResponse=values[2];
-        //creating levelid options
-        schema.schema.levelId.options=levels.data.map(function(item){
-            let {id,name}=item;
-            return {
-                label:name,
-                val:id
-            };
         });
-
-        //creating branchid options
-        schema.schema.branchId.options=branchs.data.map(function(item){
-            let {id,name}=item;
-            return {
-                label:name,
-                val:id
-            };
-        });
-
-
-        //rendering form
-
-
-        console.log(restResponse);
-
-        let Rendered=(<Form  data={restResponse.data} onSubmitForm={this.handleSubmit} />);
-
-        services.trigger('load-content',Rendered,'react');      
-
-
-
-    }.bind(this));
-
- 
-}
-configure(){
-
-}
-
-
+    }
 }
